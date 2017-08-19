@@ -1,0 +1,19 @@
+# JLK Gitignore
+# Object Files
+*.o
+*.d
+*.map
+*.nm
+
+# Compiled Binaries
+*.a
+*.kernel
+*.elf
+kernel.img
+kernel7.img
+
+# Other
+.vscode
+/.vscode
+*.DS_Store
+*.ds_store
