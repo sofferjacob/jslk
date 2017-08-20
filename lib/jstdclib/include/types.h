@@ -1,5 +1,5 @@
-#ifndef _jlklib_stdint_h
-#define _jlklib_stdint_h
+#ifndef _jlklib_types_h
+#define _jlklib_types_h
 
 typedef signed char int8_t;
 typedef unsigned char uint8_t;
@@ -31,6 +31,9 @@ typedef unsigned long long uint_fast64_t;
 // size_t implementation
 typedef unsigned size_t;
 
-#define NULL 0
+typedef enum bool_t {
+    false = 0,
+    true = 1,
+} bool;
 
 #endif

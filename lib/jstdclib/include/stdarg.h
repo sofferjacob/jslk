@@ -1,6 +1,10 @@
 #ifndef __jlklib_stdarg_h
 #define __jlklib_stdarg_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define STACKITEM int
 
 typedef unsigned char *va_list;
@@ -15,5 +19,9 @@ typedef unsigned char *va_list;
 
 #define va_arg(AP, TYPE) \
     (AP += VA_SIZE(TYPE), *((TYPE *)(AP - VA_SIZE(TYPE))))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

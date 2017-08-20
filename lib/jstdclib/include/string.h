@@ -2,9 +2,7 @@
 #define _jlk_string_h
 
 #include <stdint.h>
-
-// Provide a string datatype
-typedef char* string;
+#include <stdlib.h>
 
 size_t strlen(char *str);
 

@@ -1,5 +1,6 @@
 #include "hal.h"
 #include <types.h>
+#include <string.h>
 
 // Necessary variables
 size_t cursorx;
@@ -151,6 +152,7 @@ void writeStyledString(char *c, uint8_t color)
     }
 }
 
+/*
 size_t strlen(char *str)
 {
     size_t len = 0;
@@ -159,7 +161,7 @@ size_t strlen(char *str)
         len++;
     }
     return len;
-}
+} */
 
 void startConsole()
 {

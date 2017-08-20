@@ -1,12 +1,14 @@
-CFLAGS?=-O2 -g -I include -Wall
+CFLAGS?=-O2 -g -I include  --sysroot=sysroot -isystem=usr/include
 CPPFLAGS?=
 LDFLAGS?=
 LIBS?=
-
-export CC=$(HOME)/opt/cross/bin/i386-elf-gcc
-export AR=$(HOME)/opt/cross/bin/i386-elf-ar
-export AS=$(HOME)/opt/cross/bin/i386-elf-as
  
+export AR=i386-elf-ar
+export AS=i386-elf-as
+export CC=i386-elf-gcc
+export C++=i386-elf-g++
+export GDB=i386-elf-gdb
+
 DESTDIR?=
 PREFIX?=/usr/local
 EXEC_PREFIX?=$(PREFIX)
@@ -18,35 +20,38 @@ CPPFLAGS:=$(CPPFLAGS) -D__is_libc -Iinclude
 LIBK_CFLAGS:=$(CFLAGS)
 LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_libk
  
-CFLAGS:=$(CFLAGS)
-CPPFLAGS:=$(CPPFLAGS)
-LIBK_CFLAGS:=$(LIBK_CFLAGS)
-LIBK_CPPFLAGS:=$(LIBK_CPPFLAGS)
+ARCHDIR=arch/$(HOSTARCH)
+
+CFLAGS:=$(CFLAGS) $(ARCH_CFLAGS)
+CPPFLAGS:=$(CPPFLAGS) $(ARCH_CPPFLAGS)
+LIBK_CFLAGS:=$(LIBK_CFLAGS) $(KERNEL_ARCH_CFLAGS)
+LIBK_CPPFLAGS:=$(LIBK_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
  
 FREEOBJS=\
-string.o
+string.o \
+assert.o \
  
 HOSTEDOBJS=\
-$(ARCH_HOSTEDOBJS) \
  
 OBJS=\
 $(FREEOBJS) \
 $(HOSTEDOBJS) \
  
+LIBK_OBJS=$(FREEOBJS:.o=.libk.o)
  
 #BINARIES=libc.a libk.a # Not ready for libc yet.
-BINARIES=jlklib.a
+BINARIES=libk.a
  
 .PHONY: all clean install install-headers install-libs
-.SUFFIXES: .o .jlklib.o .c .S
+.SUFFIXES: .o .libk.o .c .S
  
 all: $(BINARIES)
  
 libc.a: $(OBJS)
 	$(AR) rcs $@ $(OBJS)
  
-jlklib.a: $(LIBK_OBJS)
-	$(AR) rcs $@ $(FREEOBJS)
+libk.a: $(LIBK_OBJS)
+	$(AR) rcs $@ $(LIBK_OBJS)
  
 .c.o:
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
@@ -72,8 +77,7 @@ install-headers:
 	cp -R --preserve=timestamps include/. $(DESTDIR)$(INCLUDEDIR)/.
  
 install-libs: $(BINARIES)
-	mkdir -p $(DESTDIR)$(LIBDIR)
-	cp $(BINARIES) $(DESTDIR)$(LIBDIR)
+	cp libk.a ../../sysroot/usr/lib
  
 -include $(OBJS:.o=.d)
 -include $(LIBK_OBJS:.o=.d)

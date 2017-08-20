@@ -13,10 +13,11 @@ export AS=i386-elf-as
 export CC=i386-elf-gcc
 export C++=i386-elf-g++
 export GDB=i386-elf-gdb
+export SYSROOT=$(pwd)/sysroot
 
-CFLAGS=-nostdlib -nostdinc -fno-builtin -I include
-CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include
-LDFLAGS=-Tlink.ld
+CFLAGS=-nostdlib -nostdinc -fno-builtin -lk -lgcc -I include -I sysroot/usr/include -L sysroot/usr/lib -l libk.a
+CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include --sysroot=$SYSROOT
+LDFLAGS=-Tlink.ld -Lsysroot/usr/lib -lk
 ASFLAGS=-felf
 
 SOURCES=hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jlk.o

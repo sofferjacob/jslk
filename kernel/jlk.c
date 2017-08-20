@@ -1,5 +1,5 @@
 #include <hal.h>
-#include <types.h>
+#include <stdint.h>
 #include <version.h>
 
 int kernel_main() {
