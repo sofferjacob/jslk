@@ -15,12 +15,15 @@ export C++=i386-elf-g++
 export GDB=i386-elf-gdb
 export SYSROOT=$(pwd)/sysroot
 
-CFLAGS=-nostdlib -nostdinc -fno-builtin -lk -lgcc -I include -I sysroot/usr/include -L sysroot/usr/lib -l libk.a
+CFLAGS=-nostdlib -nostdinc -fno-builtin -I include -I lib/jstdclib/include
 CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include --sysroot=$SYSROOT
-LDFLAGS=-Tlink.ld -Lsysroot/usr/lib -lk
+LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
-SOURCES=hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jlk.o
+include lib/jstdclib/make.config # So we can use it in kernel mode.
+
+SOURCES=$(JSTDC_SOURCES) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jlk.o hal/dprint.o \
+hal/idt.o hal/isr.o hal/idt_s.o hal/isr_s.o
 
 all: $(SOURCES) link
 

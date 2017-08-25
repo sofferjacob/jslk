@@ -5,5 +5,7 @@
 #include <stdlib.h>
 
 size_t strlen(char *str);
+void *memset(void *str, int c, size_t n);
+typedef char* string;
 
 #endif

@@ -3,7 +3,10 @@
 
 // Include auxiliary header files
 #include "vga.h"
-#include <types.h>
+#include <stdint.h>
+#include <string.h>
+
+#define KERNEL_DEBUG
 
 // Screen I/O
 void kputc(char c);
@@ -13,6 +16,9 @@ void consolePutChar(char c, uint8_t color, size_t x, size_t y);
 void setConsoleColor(uint8_t color);
 uint8_t getColor(vga_color text, vga_color background);
 void clear_screen();
+void debugPrint(string msg);
+void kernelPrintDec(uint32_t n);
+void kernelPrintHex(uint32_t n);
 
 // Port I/O
 void outb(uint16_t port, uint8_t value);

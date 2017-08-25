@@ -5,7 +5,6 @@
 int kernel_main() {
     _interrupts(off);   // We don't have and IDT yet
     halInitialize();
-
     kprint("Welcome to the JLK Kernel! \n");
     kprint("Copyright (c) 2017 Jacobo Soffer. All Rights Reserved \n");
     kprint("Kernel version: "); kprint(KERNEL_VERSION_STRING); kprint("\n");
