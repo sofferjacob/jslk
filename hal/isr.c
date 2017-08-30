@@ -1,6 +1,10 @@
+//
+// isr.c -- High level interrupt service routines and interrupt request handlers.
+//          Part of this code is modified from Bran's kernel development tutorials.
+//          Rewritten for JamesM's kernel development tutorials.
+//
 #include "isr.h"
 #include "hal.h"
-#include <stdint.h>
 
 #define KERNEL_DEBUG
 
@@ -41,26 +45,28 @@ static string intDescription[] = {
     "Reserved Interrupt",
 };
 
-
 void isr_handler(registers_t regs) {
     #ifdef KERNEL_DEBUG
-    kprint("Received interrupt: "); kernelPrintDec(regs.int_no); kprint("("); kprint(intDescription[regs.int_no]);
-    kprint(")\n");
+    kprint("Received interrupt: "); kernelPrintDec(regs.int_no);
+    kprint(" ("); kprint(intDescription[regs.int_no]); kprint(") \n");
     #endif
-    // TODO: Check if a handler was specified and execute it if it was.
-    if (hiIntHandler[regs.int_no].hasHandler == true) {
+    if (hiIntHandler[regs.int_no].hasHandler == true)
+    {
         hiIntHandler[regs.int_no].handler();
     }
 }
 
-void registerHighHandler(uint8_t num, void (*hiHand)) {
+void registerHighHandler(uint8_t num, void(*hiHand))
+{
     hiIntHandler[num].hasHandler = true;
     hiIntHandler[num].handler = hiHand;
 }
 
-void addDescription(uint8_t num, string description) {
-    if (num <= 19) {
-        debugPrint("ERROR: Could not change interrupt description, interrupt locked");
+void addDescription(uint8_t num, string description)
+{
+    if (num <= 19)
+    {
+        kprint("ERROR: Could not change interrupt description, interrupt locked");
         return;
     }
     intDescription[num] = description;

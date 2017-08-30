@@ -13,17 +13,16 @@ export AS=i386-elf-as
 export CC=i386-elf-gcc
 export C++=i386-elf-g++
 export GDB=i386-elf-gdb
-export SYSROOT=$(pwd)/sysroot
 
 CFLAGS=-nostdlib -nostdinc -fno-builtin -I include -I lib/jstdclib/include
-CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include --sysroot=$SYSROOT
+CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
-include lib/jstdclib/make.config # So we can use it in kernel mode.
+include lib/jstdclib/make.config
 
-SOURCES=$(JSTDC_SOURCES) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jlk.o hal/dprint.o \
-hal/idt.o hal/isr.o hal/idt_s.o hal/isr_s.o
+SOURCES=$(JSTDC_SOURCES) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jslk.o \
+hal/descriptor_tables.o hal/interrupt.o hal/isr.o hal/gdt.o
 
 all: $(SOURCES) link
 

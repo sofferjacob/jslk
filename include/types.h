@@ -29,6 +29,9 @@ typedef long long int_fast64_t;
 typedef unsigned long long uint_fast64_t;
 
 // size_t implementation
+typedef unsigned size_t;
 
+// Temp string implementation until jlklib is linked
+typedef char* string;
 
 #endif

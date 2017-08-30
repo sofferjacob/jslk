@@ -1,10 +1,9 @@
 #include "hal.h"
+#include "descriptor_tables.h"
 
 extern void startConsole();
-// extern int start_gdt();
-extern void init_idt();
 
 void halInitialize() {
     startConsole();
-    init_idt();
+    init_descriptor_tables();
 }

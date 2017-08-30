@@ -3,10 +3,8 @@
 
 // Include auxiliary header files
 #include "vga.h"
-#include <stdint.h>
 #include <string.h>
-
-#define KERNEL_DEBUG
+#include <stdint.h>
 
 // Screen I/O
 void kputc(char c);
@@ -40,6 +38,11 @@ uint8_t _interrupts(mode_t mode);
 void _halt();
 void _syscritical(mode_t mode);
 void system_panic(string msg);
+
+// System interrupt handler
+void registerHighHandler(uint8_t num, void(*hiHand));
+void addDescription(uint8_t num, string description);
+void callInterrupt(uint8_t num);
 
 // Other functions
 mode_t readInterruptStatus();

@@ -1,5 +1,5 @@
 #include "hal.h"
-#include <types.h>
+#include <stdint.h>
 #include <string.h>
 
 // Necessary variables
@@ -152,8 +152,7 @@ void writeStyledString(char *c, uint8_t color)
     }
 }
 
-/*
-size_t strlen(char *str)
+/*size_t strlen(char *str)
 {
     size_t len = 0;
     while (str[len])
@@ -161,7 +160,7 @@ size_t strlen(char *str)
         len++;
     }
     return len;
-} */
+}*/
 
 void startConsole()
 {
@@ -171,8 +170,8 @@ void startConsole()
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
     clear_screen();
-    writeStyledString("JLK Kernel 0.0.1 - 20170819", statusBarColor);
-    for (size_t i = 0; i < (80 - strlen("JLK Kernel 0.0.1 - 00000000")); i++)
+    writeStyledString("JSLK Kernel 0.0.2 - 20170830", statusBarColor);
+    for (size_t i = 0; i < (80 - strlen("JSLK Kernel 0.0.0 - 00000000")); i++)
     {
         writeStyledString(" ", statusBarColor);
     }

@@ -1,5 +1,5 @@
 #include "hal.h"
-#include <types.h>
+#include <stdint.h>
 
 static mode_t interrupt_status;
 

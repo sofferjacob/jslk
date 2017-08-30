@@ -1,5 +1,5 @@
 // Portions of this code are based on James 'M tutorials.
-#include <types.h>
+#include <stdint.h>
 #include "hal.h"
 
 void outb(uint16_t port, uint8_t value) {
