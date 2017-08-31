@@ -45,6 +45,7 @@ static string intDescription[] = {
     "Reserved Interrupt",
 };
 
+
 void isr_handler(registers_t regs) {
     #ifdef KERNEL_DEBUG
     kprint("Received interrupt: "); kernelPrintDec(regs.int_no);

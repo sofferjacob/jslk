@@ -150,127 +150,127 @@ void callInterrupt(uint8_t num) {
         }
         case 7:
         {
-            asm volatile("int $0x7");
+            asm volatile("int $7");
             break;
         }
         case 8:
         {
-            asm volatile("int $0x8");
+            asm volatile("int $8");
             break;
         }
         case 9:
         {
-            asm volatile("int $0x9");
+            asm volatile("int $9");
             break;
         }
         case 10:
         {
-            asm volatile("int $0x10");
+            asm volatile("int $10");
             break;
         }
         case 11:
         {
-            asm volatile("int $0x11");
+            asm volatile("int $11");
             break;
         }
         case 12:
         {
-            asm volatile("int $0x12");
+            asm volatile("int $12");
             break;
         }
         case 13:
         {
-            asm volatile("int $0x13");
+            asm volatile("int $13");
             break;
         }
         case 14:
         {
-            asm volatile("int $0x14");
+            asm volatile("int $14");
             break;
         }
         case 15:
         {
-            asm volatile("int $0x15");
+            asm volatile("int $15");
             break;
         }
         case 16:
         {
-            asm volatile("int $0x16");
+            asm volatile("int $16");
             break;
         }
         case 17:
         {
-            asm volatile("int $0x17");
+            asm volatile("int $17");
             break;
         }
         case 18:
         {
-            asm volatile("int $0x18");
+            asm volatile("int $18");
             break;
         }
         case 19:
         {
-            asm volatile("int $0x19");
+            asm volatile("int $19");
             break;
         }
         case 20:
         {
-            asm volatile("int $0x20");
+            asm volatile("int $20");
             break;
         }
         case 21:
         {
-            asm volatile("int $0x21");
+            asm volatile("int $21");
             break;
         }
         case 22:
         {
-            asm volatile("int $0x22");
+            asm volatile("int $22");
             break;
         }
         case 23:
         {
-            asm volatile("int $0x23");
+            asm volatile("int $23");
             break;
         }
         case 24:
         {
-            asm volatile("int $0x24");
+            asm volatile("int $24");
             break;
         }
         case 25:
         {
-            asm volatile("int $0x25");
+            asm volatile("int $25");
             break;
         }
         case 26:
         {
-            asm volatile("int $0x26");
+            asm volatile("int $26");
             break;
         }
         case 27:
         {
-            asm volatile("int $0x27");
+            asm volatile("int $27");
             break;
         }
         case 28:
         {
-            asm volatile("int $0x28");
+            asm volatile("int $28");
             break;
         }
         case 29:
         {
-            asm volatile("int $0x29");
+            asm volatile("int $29");
             break;
         }
         case 30:
         {
-            asm volatile("int $0x30");
+            asm volatile("int $30");
             break;
         }
         case 31:
         {
-            asm volatile("int $0x31");
+            asm volatile("int $31");
             break;
         }
         default: {

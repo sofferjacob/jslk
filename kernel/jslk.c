@@ -20,7 +20,7 @@ int kernel_main() {
     registerHighHandler(3, testHandler);
     // asm volatile ("int $0x3");
     callInterrupt(3);
-    asm volatile ("int $0x4");
+    asm volatile ("int $4");
     kprint("Test concluded, halting the kernel \n");
     // _halt();
     asm volatile ("hlt");
