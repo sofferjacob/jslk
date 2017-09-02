@@ -40,9 +40,15 @@ void _syscritical(mode_t mode);
 void system_panic(string msg);
 
 // System interrupt handler
-void registerHighHandler(uint8_t num, void(*hiHand));
+void registerInterruptHandler(uint8_t num, void(*hiHand));
 void addDescription(uint8_t num, string description);
 void callInterrupt(uint8_t num);
+string getintDescription();
+
+// System Timer Related functions
+void start_pit(uint32_t freq);
+size_t readSystemTime();
+#define TICKSTOSEC 200 // 200 ticks = 1 sec
 
 // Other functions
 mode_t readInterruptStatus();

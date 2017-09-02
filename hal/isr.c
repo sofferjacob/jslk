@@ -57,7 +57,7 @@ void isr_handler(registers_t regs) {
     }
 }
 
-void registerHighHandler(uint8_t num, void(*hiHand))
+void registerInterruptHandler(uint8_t num, void(*hiHand))
 {
     hiIntHandler[num].hasHandler = true;
     hiIntHandler[num].handler = hiHand;
@@ -71,4 +71,17 @@ void addDescription(uint8_t num, string description)
         return;
     }
     intDescription[num] = description;
+}
+
+void irq_handler(registers_t regs) {
+    if (regs.int_no >= 40) {
+        // Send EOI to slave
+        outb(0xA0, 0x20);
+    }
+    // Send EOI to master
+    outb(0x20, 0x20);
+    if (hiIntHandler[regs.int_no].hasHandler == true)
+    {
+        hiIntHandler[regs.int_no].handler();
+    }
 }
