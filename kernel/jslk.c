@@ -20,12 +20,12 @@ int kernel_main() {
     writeStyledString("This is a string with style \n", stringColor);
     kprint("Test concluded, running test for interrupts \n");
     registerInterruptHandler(3, testHandler);
-    // asm volatile ("int $0x3");
-    callInterrupt(3);
-    asm volatile ("int $4");
-    asm volatile ("sti");
-    start_pit(100);
+    genInterrupt(3);
+    genInterrupt(4);
+    kprint("Test concluded, running test for a 15 second timer \n");
     start_timer(15.0, timerHandler);
+    kprint("Test concluded, running test for a 2 second delay \n");
+    delay(2);
     kprint("Test concluded, halting the kernel \n");
     _halt();
 }
@@ -35,5 +35,5 @@ void testHandler() {
 }
 
 void timerHandler() {
-    kernelPrintDec(readSystemTime());
+    kernelPrintDec(readSystemTime()); kprint("\n");
 }

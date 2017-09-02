@@ -170,7 +170,7 @@ void startConsole()
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
     clear_screen();
-    writeStyledString("JSLK Kernel 0.0.2 - 20170830", statusBarColor);
+    writeStyledString("JSLK Kernel 0.0.3 - 20170901", statusBarColor);
     for (size_t i = 0; i < (80 - strlen("JSLK Kernel 0.0.0 - 00000000")); i++)
     {
         writeStyledString(" ", statusBarColor);

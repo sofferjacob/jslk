@@ -1,23 +1,12 @@
 #include "hal.h"
 #include <stdint.h>
 
-static mode_t interrupt_status;
-
 uint8_t _interrupts(mode_t mode) {
-    if (mode == on) {
-        if (interrupt_status != on) {
-            asm volatile ("sti");
-            interrupt_status = on;
-        }
-    } else if (mode == off) {
-        if (interrupt_status != off) {
-            asm volatile ("cli");
-            interrupt_status = off;
-        } else {
-            kprint("ERROR: Cannot disable interrupts (they are already disabled) \n");
-            return 1;
-        }
-    }
+   if (mode == on) {
+       asm volatile ("sti");
+   } else if (mode == off) {
+       asm volatile ("cli");
+   }
     return 0;
 }
 
@@ -26,20 +15,11 @@ void _halt() {
 }
 
 void _syscritical(mode_t mode) {
-    uint8_t previous_interrupt_status = interrupt_status;
     if (mode == on) {
-        if (interrupt_status != off) {
-            _interrupts(off);
-        }
+        _interrupts(off);
     } else if (mode == off) {
-        if (previous_interrupt_status != off) {
-            _interrupts(on);
-        }
+        _interrupts(on);
     }
-}
-
-mode_t readInterruptStatus() {
-    return interrupt_status;
 }
 
 void system_panic(string msg) {

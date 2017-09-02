@@ -42,16 +42,15 @@ void system_panic(string msg);
 // System interrupt handler
 void registerInterruptHandler(uint8_t num, void(*hiHand));
 void addDescription(uint8_t num, string description);
-void callInterrupt(uint8_t num);
+void genInterrupt(uint8_t num);
 string getintDescription();
 
 // System Timer Related functions
 void start_pit(uint32_t freq);
 size_t readSystemTime();
-#define TICKSTOSEC 200 // 200 ticks = 1 sec
+#define TICKSTOSEC 100 // 100 ticks = 1 sec at a frequency of 100 Mhz
 
 // Other functions
-mode_t readInterruptStatus();
 #define KERNEL_PANIC(X) system_panic(X);
 
 #endif

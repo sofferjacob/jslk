@@ -140,6 +140,7 @@ static void init_idt()
     registerInterruptHandler(12, intFaultHandler);
 
     idt_flush((uint32_t)&idt_ptr);
+    asm volatile ("sti");
 }
 
 static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
@@ -154,7 +155,7 @@ static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags
     idt_entries[num].flags = flags /* | 0x60 */;
 }
 
-void callInterrupt(uint8_t num) {
+void genInterrupt(uint8_t num) {
     switch (num) {
         case 0: {
             asm volatile ("int $0x0");
@@ -312,6 +313,87 @@ void callInterrupt(uint8_t num) {
             asm volatile("int $31");
             break;
         }
+        case 32:
+        {
+            asm volatile("int $32");
+            break;
+        }
+        case 33:
+        {
+            asm volatile("int $33");
+            break;
+        }
+        case 34:
+        {
+            asm volatile("int $34");
+            break;
+        }
+        case 35:
+        {
+            asm volatile("int $35");
+            break;
+        }
+        case 36:
+        {
+            asm volatile("int $36");
+            break;
+        }
+        case 37:
+        {
+            asm volatile("int $37");
+            break;
+        }
+        case 38:
+        {
+            asm volatile("int $38");
+            break;
+        }
+        case 39:
+        {
+            asm volatile("int $39");
+            break;
+        }
+        case 40:
+        {
+            asm volatile("int $40");
+            break;
+        }
+        case 41:
+        {
+            asm volatile("int $41");
+            break;
+        }
+        case 42:
+        {
+            asm volatile("int $42");
+            break;
+        }
+        case 43:
+        {
+            asm volatile("int $43");
+            break;
+        }
+        case 44:
+        {
+            asm volatile("int $44");
+            break;
+        }
+        case 45:
+        {
+            asm volatile("int $45");
+            break;
+        }
+        case 46:
+        {
+            asm volatile("int $46");
+            break;
+        }
+        case 47:
+        {
+            asm volatile("int $47");
+            break;
+        }
+        
         default: {
             break;
         }
