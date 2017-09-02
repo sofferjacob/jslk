@@ -17,3 +17,5 @@ kernel7.img
 /.vscode
 *.DS_Store
 *.ds_store
+TODO.md
+/TODO.md
