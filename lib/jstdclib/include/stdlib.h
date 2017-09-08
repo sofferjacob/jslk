@@ -1,11 +1,11 @@
 #ifndef _jstdclib_stdlib_h
 #define _jstdclib_stdlib_h
 
+#include "size_t.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef unsigned size_t;
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1

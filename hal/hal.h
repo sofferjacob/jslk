@@ -50,6 +50,11 @@ void start_pit(uint32_t freq);
 size_t readSystemTime();
 #define TICKSTOSEC 100 // 100 ticks = 1 sec at a frequency of 100 Mhz
 
+// System Physical Memmory Allocator (PMM)
+int pmmMapFirstFree();  // Returns a free frame
+void pmmInit(size_t memSize, physaddr bitmap);  // Initializes the PMM
+
+
 // Other functions
 #define KERNEL_PANIC(X) system_panic(X);
 

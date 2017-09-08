@@ -1,1 +1,1 @@
-Place your toolchain here if you want it to be in your path automatically.
+Place your toolchain here if you want it to be in your path automatically (TODO, if you put your toolchain here add it to your path manually).

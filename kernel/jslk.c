@@ -2,11 +2,12 @@
 #include <types.h>
 #include <version.h>
 #include <timer.h>
+#include "multiboot.h"
 
 void testHandler();
 void timerHandler();
 
-int kernel_main() {
+int kernel_main(multiboot_t* bootinfo) {
     _interrupts(off);   // We don't have and IDT yet
     halInitialize();
 
@@ -22,8 +23,8 @@ int kernel_main() {
     registerInterruptHandler(3, testHandler);
     genInterrupt(3);
     genInterrupt(4);
-    kprint("Test concluded, running test for a 15 second timer \n");
-    start_timer(15.0, timerHandler);
+    kprint("Test concluded, running test for a 5 second timer \n");
+    start_timer(5.0, timerHandler);
     kprint("Test concluded, running test for a 2 second delay \n");
     delay(2);
     kprint("Test concluded, halting the kernel \n");
