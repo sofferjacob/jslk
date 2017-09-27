@@ -51,9 +51,9 @@ size_t readSystemTime();
 #define TICKSTOSEC 100 // 100 ticks = 1 sec at a frequency of 100 Mhz
 
 // System Physical Memmory Allocator (PMM)
+typedef uint32_t physaddr; // So it doesn't go out of scope...
 int pmmMapFirstFree();  // Returns a free frame
 void pmmInit(size_t memSize, physaddr bitmap);  // Initializes the PMM
-typedef uint32_t physaddr; // So it doesn't go out of scope...
 
 // Other functions
 #define KERNEL_PANIC(X) system_panic(X);

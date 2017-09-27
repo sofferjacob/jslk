@@ -40,6 +40,41 @@ int pmmMapFirstFree() {
     return -1;
 }
 
+int pmmMapFirstFrees(size_t size) {
+    if (size == 0)
+        return -1;
+
+    if (size == 1)
+        return pmmMapFirstFree();
+
+    for (uint32_t i = 0; i < pmmGetBlockCount() / 32; i++)
+        if (pmm_memory_map[i] != 0xffffffff)
+            for (int j = 0; j < 32; j++)
+            { //! test each bit in the dword
+
+                int bit = 1 << j;
+                if (!(pmm_memory_map[i] & bit))
+                {
+
+                    int startingBit = i * 32;
+                    startingBit += bit; //get the free bit in the dword at index i
+
+                    uint32_t free = 0; //loop through each bit to see if its enough space
+                    for (uint32_t count = 0; count <= size; count++)
+                    {
+
+                        if (!pmm_test(startingBit + count))
+                            free++; // this bit is clear (free frame)
+
+                        if (free == size)
+                            return i * 4 * 8 + j; //free count==size needed; return index
+                    }
+                }
+            }
+
+    return -1;
+}
+
 void pmmInit(size_t memSize, physaddr bitmap) {
     pmm_mem_size = memSize;
     pmm_memory_map = (uint32_t *)bitmap;
@@ -64,7 +99,7 @@ void pmmInitRegion(physaddr base, size_t size) {
 // deinit a memmory region
 void pmmDeinitRegion(physaddr base, size_t size) {
     int align = base / PMM_BLOCK_SIZE;
-    int size = size / PMM_BLOCK_SIZE;
+    int blocks = size / PMM_BLOCK_SIZE;
 
     for ( ; blocks > 0; blocks--) {
         pmm_set(align++);
@@ -87,6 +122,24 @@ void* pmmAllocBlock() {
     return (void*)addr;
 }
 
+void* pmmAllocBlocks(size_t size) {
+    if (pmmGetBlockCount() <= 0) {
+        return 0;  // Not enough blocks
+    } 
+    if (size == 1) {
+        return pmmAllocBlock;
+    } else if (size <= 0) {
+        return 0;
+    }
+    int frame = pmmMapFirstFrees(size);
+    for (uint32_t i = 0; i < size; i++) {
+        pmm_set(frame + i);
+    }
+    pmm_used_blocks += size;
+    physaddr addr = frame * PMM_BLOCK_ALIGN;
+    return (void*)addr;
+}
+
 // deallocate a block
 void pmmFreeBlock(void *p) {
     physaddr address = (physaddr)p;
@@ -95,26 +148,17 @@ void pmmFreeBlock(void *p) {
     pmm_used_blocks--;
 }
 
-
-int pmmAllocBlocks(size_t num) {
-    for (size_t i = 0; i < num; i++) {
-        int results[num];
-        results[i] = pmmAllocBlock();
-        if (results[i] == 0) {
-            // There was an error, undo what we've done
-            i--;
-            while (i != 0) {
-                pmmFreeBlocks(results[i]);
-                i--;
-            }
-            return -1;
-        }
+void pmmFreeBlocks(void *p, size_t size) {
+    physaddr address = (physaddr)p;
+    int frame = address / PMM_BLOCK_ALIGN;
+    for (uint32_t i = 0; i < size; i++) {
+        pmm_unset(frame + i);
     }
-    return 0;
+    pmm_used_blocks -= size;
 }
 
 /*============= TODO =============
-* pmmAllocBlocks
-* pmmFreeBlocks
-* Initialize memory regions at startup.
+* pmmAllocBlocks [x]
+* pmmFreeBlocks  [x]
+* Initialize memory regions at startup. [ ]
 ==================================*/
