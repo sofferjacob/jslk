@@ -22,7 +22,7 @@ ASFLAGS=-felf
 include lib/jstdclib/make.config
 
 SOURCES=$(JSTDC_SOURCES) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jslk.o \
-hal/descriptor_tables.o hal/interrupt.o hal/isr.o hal/gdt.o hal/pit.o kernel/timer.o hal/pmm.o
+hal/descriptor_tables.o hal/interrupt.o hal/isr.o hal/gdt.o hal/pit.o kernel/timer.o hal/pmm.o hal/atomical.o
 
 all: $(SOURCES) link
 

@@ -1,5 +1,5 @@
 #ifndef _x86_vga_h
-#define _x86_hal_h
+#define _x86_vga_h
 
 // Provide simple interface to set vga text/background colors
 enum vga_color_t

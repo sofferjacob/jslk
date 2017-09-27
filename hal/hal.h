@@ -53,9 +53,20 @@ size_t readSystemTime();
 // System Physical Memmory Allocator (PMM)
 int pmmMapFirstFree();  // Returns a free frame
 void pmmInit(size_t memSize, physaddr bitmap);  // Initializes the PMM
-
+typedef uint32_t physaddr; // So it doesn't go out of scope...
 
 // Other functions
 #define KERNEL_PANIC(X) system_panic(X);
+
+// Atomical Functions
+/*========== WARNING ===========
+Use only when necessary and in
+quick functions only, else
+interrupt latency  and kernel's 
+performance may be affected
+or the kernel may get stuck.
+=================================*/
+void atomicalStart();
+void atomicalRelease();
 
 #endif
