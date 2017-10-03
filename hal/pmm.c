@@ -157,6 +157,10 @@ void pmmFreeBlocks(void *p, size_t size) {
     pmm_used_blocks -= size;
 }
 
+uint32_t getPmmSize() {
+    return sizeof(pmm_memory_map);
+}
+
 /*============= TODO =============
 * pmmAllocBlocks [x]
 * pmmFreeBlocks  [x]

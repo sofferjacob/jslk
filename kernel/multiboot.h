@@ -23,6 +23,12 @@ struct multiboot {
     uint32_t cmdLine;
     uint32_t mods_count;
     uint32_t mods_addr;
+    uint32_t num;
+    uint32_t size;
+    uint32_t addr;
+    uint32_t shndx;
+    uint32_t mmap_length;
+    uint32_t mmap_addr;
     uint32_t drives_length;
     uint32_t drives_addr;
     uint32_t config_table;

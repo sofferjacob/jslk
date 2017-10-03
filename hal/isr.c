@@ -74,6 +74,7 @@ void addDescription(uint8_t num, string description)
 }
 
 void irq_handler(registers_t regs) {
+    // TODO: Interrupt chaining
     if (regs.int_no >= 40) {
         // Send EOI to slave
         outb(0xA0, 0x20);
@@ -85,3 +86,6 @@ void irq_handler(registers_t regs) {
         hiIntHandler[regs.int_no].handler();
     }
 }
+
+
+

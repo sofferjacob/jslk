@@ -3,10 +3,11 @@
 
 #ifndef __cplusplus
 
-enum bool_t {
+enum boolean_t {
     false = 0,
     true = 1,
-}; typedef enum bool_t bool;
+}; typedef enum boolean_t bool;
+typedef enum boolean_t bool;
 
 #endif
 

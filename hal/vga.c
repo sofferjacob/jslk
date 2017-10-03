@@ -1,6 +1,7 @@
 #include "hal.h"
 #include <stdint.h>
 #include <string.h>
+#include <va_list.h>
 
 // Necessary variables
 size_t cursorx;
@@ -152,16 +153,6 @@ void writeStyledString(char *c, uint8_t color)
     }
 }
 
-/*size_t strlen(char *str)
-{
-    size_t len = 0;
-    while (str[len])
-    {
-        len++;
-    }
-    return len;
-}*/
-
 void startConsole()
 {
     cursorx = 0;
@@ -170,7 +161,7 @@ void startConsole()
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
     clear_screen();
-    writeStyledString("JSLK Kernel 0.0.4 - 20170901", statusBarColor);
+    writeStyledString("JSLK Kernel 0.0.6 - 20171003", statusBarColor);
     for (size_t i = 0; i < (80 - strlen("JSLK Kernel 0.0.0 - 00000000")); i++)
     {
         writeStyledString(" ", statusBarColor);
@@ -243,4 +234,33 @@ void kernelPrintHex(uint32_t n) {
     {
         kputc(tmp + '0');
     }
+}
+
+int kprintf(string c, ...) {
+    va_list args;
+    va_start(args, *c);
+    uint8_t argsNum = 0;
+    uint8_t integerArgs = 0;
+    string strArgs;
+    for (size_t i = 0; c[i]; i++) {
+        if (c[i] == '%') argsNum++;
+    }
+    size_t i = 0;
+    while (c[i]) {
+        if (c[i] == '%') {
+            if (c[i + 1] == 'i') {
+                integerArgs = va_arg(args, int);
+                kernelPrintDec(integerArgs); 
+            }
+            else if (c[i + 1] == 's') {
+                strArgs = va_arg(args, string);
+                kprint(strArgs);
+            }
+            i += 2;  
+        }
+        kputc(c[i]);
+        i++;
+    }
+    va_end(args);
+    return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef _jlklib_stdint_h
 #define _jlklib_stdint_h
 
+#include "size_t.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -17,6 +17,7 @@ void clear_screen();
 void debugPrint(string msg);
 void kernelPrintDec(uint32_t n);
 void kernelPrintHex(uint32_t n);
+int kprintf(string c, ...);
 
 // Port I/O
 void outb(uint16_t port, uint8_t value);
@@ -54,19 +55,27 @@ size_t readSystemTime();
 typedef uint32_t physaddr; // So it doesn't go out of scope...
 int pmmMapFirstFree();  // Returns a free frame
 void pmmInit(size_t memSize, physaddr bitmap);  // Initializes the PMM
+uint32_t getPmmSize();
+void pmmFreeBlocks(void *p, size_t size);
+void pmmFreeBlock(void *p);
+void *pmmAllocBlocks(size_t size);
+void *pmmAllocBlock();
+void pmmDeinitRegion(physaddr base, size_t size);
+void pmmInitRegion(physaddr base, size_t size);
+
 
 // Other functions
 #define KERNEL_PANIC(X) system_panic(X);
 
-// Atomical Functions
-/*========== WARNING ===========
+    // Atomical Functions
+    /*========== WARNING ===========
 Use only when necessary and in
 quick functions only, else
 interrupt latency  and kernel's 
 performance may be affected
 or the kernel may get stuck.
 =================================*/
-void atomicalStart();
+    void atomicalStart();
 void atomicalRelease();
 
 #endif
