@@ -9,4 +9,6 @@ before_install:
   export PATH=$PATH:$HOME/opt/cross/bin
 
 script:
+  cd
+  cd sofferjacob/jslk
   make clean all floppy
