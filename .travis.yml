@@ -1,7 +1,7 @@
 language: c
 os: osx
 
-install:
+before_install:
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   brew install nasm
   wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_mac_v.1.0.0.zip
