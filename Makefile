@@ -28,7 +28,7 @@ all: $(SOURCES) link
 
 link:
 	$(CC) -v
-	/Users/development/opt/cross/i386-elf/bin/ld $(LDFLAGS) -o jlk.kernel $(SOURCES)
+	i386-elf-ld $(LDFLAGS) -o jlk.kernel $(SOURCES)
 
 .s.o:
 	nasm $(ASFLAGS) $<

@@ -32,7 +32,7 @@ string memTypes[] = {
     "ACPI NVS Memory"
 };
 
-int kernel_main(multiboot_t* bootinfo) {
+int kernel_main(multiboot_info_t* bootinfo) {
     _interrupts(off);   // We don't have and IDT yet
     halInitialize();
 
@@ -41,6 +41,9 @@ int kernel_main(multiboot_t* bootinfo) {
     kprintf("Kernel version: %i.%i.%i-%s \n", KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE, KERNEL_RELEASE_TYPE);
     kprint("Kernel API version: "); kprint(JSLK_API_VERSION); kprint("\n"); 
     kprint("Build number: "); kprint(KERNEL_BUILD); kprint("\n");
+    if (bootinfo->flags[0] == 1) {
+        kprint("Bit is set \n");
+    }
     kprint("Running test for styled strings: \n");
     uint8_t stringColor = getColor(vga_red, vga_green);
     kprintf("test, %i", 21);
