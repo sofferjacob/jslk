@@ -54,6 +54,7 @@ static void move_cursor()
     outb(0x3D5, cursorIndex);
 }
 
+/*
 static void scrollConsole()
 {
     // Just for now
@@ -61,6 +62,19 @@ static void scrollConsole()
     {
         cursory = 1;
     }
+}*/
+static void scrollConsole() {
+  uint8_t blankColor = getColor(vga_light_grey, vga_black);
+  uint16_t blank = getVgaByte(0x20, blankColor);
+  if (cursory >= 25) {
+    for (size_t i = 0*80; i < 24*80; i++) {
+      terminal_buffer[i] = terminal_buffer[i+80];
+    }
+    for (size_t i = 24*80; i < 25*80; i++) {
+      terminal_buffer[i] = blank;
+    }
+    cursory = 24;
+  }
 }
 
 void setConsoleColor(uint8_t color)
@@ -250,13 +264,13 @@ int kprintf(string c, ...) {
         if (c[i] == '%') {
             if (c[i + 1] == 'i') {
                 integerArgs = va_arg(args, int);
-                kernelPrintDec(integerArgs); 
+                kernelPrintDec((uint32_t)integerArgs);
             }
             else if (c[i + 1] == 's') {
                 strArgs = va_arg(args, string);
                 kprint(strArgs);
             }
-            i += 2;  
+            i += 2;
         }
         kputc(c[i]);
         i++;
