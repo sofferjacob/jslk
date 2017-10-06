@@ -7,6 +7,7 @@ static size_t sys_ticks = 0;
 
 static void pitHandler() {
     sys_ticks++;
+    checkTimers();
 }
 
 void start_pit(uint32_t freq) {

@@ -40,8 +40,8 @@ int initRegions(multiboot_info_t* bootinfo) {
         system_panic("Couldn't load memory map");
     }
     memory_map_t* mmap = bootinfo->mmap_addr;
+    uint8_t regNum = 0;
     while (mmap < bootinfo->mmap_addr + bootinfo->mmap_length) {
-        uint8_t regNum = 0;
         if (mmap->type > 4) {
           mmap->type = 2;
         }
@@ -63,7 +63,11 @@ int kernel_main(multiboot_info_t* bootinfo) {
 
     kprint("Welcome to the JSLK Kernel! \n");
     kprint("Copyright (c) 2017 Jacobo Soffer. All Rights Reserved \n");
+    #ifndef KERNEL_VERSION_EXTRA
     kprintf("Kernel version: %i.%i.%i-%s \n", KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE, KERNEL_RELEASE_TYPE);
+    #else
+    kprintf("Kernel version: %i.%i.%i.%i-%s \n", KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE, KERNEL_VERSION_EXTRA, KERNEL_RELEASE_TYPE);
+    #endif
     kprint("Kernel API version: "); kprint(JSLK_API_VERSION); kprint("\n");
     kprint("Build number: "); kernelPrintDec(KERNEL_BUILD_NUM); kprint("\n");
     if ((bootinfo->flags & MULTIBOOT_INFO_MEM_MAP)) {
@@ -77,7 +81,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     genInterrupt(3);
     genInterrupt(4);
     kprint("Test concluded, running test for a 5 second timer \n");
-    //start_timer(15.0, timerHandler);
+    register_timer(5.0, timerHandler);
     kprint("Test concluded, running test for a 2 second delay \n");
     delay(2);
     kprint("Test concluded\n");
@@ -109,5 +113,6 @@ void testHandler() {
 }
 
 void timerHandler() {
+    kprint("Executing listener() for timer 0 \n");
     kernelPrintDec(readSystemTime()); kprint("\n");
 }
