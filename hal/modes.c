@@ -23,6 +23,7 @@ void _syscritical(mode_t mode) {
 }
 
 void system_panic(string msg) {
+    atomicalStart();
     uint8_t panicColor = getColor(vga_light_grey, vga_blue);
     setConsoleColor(panicColor);
     clear_screen();

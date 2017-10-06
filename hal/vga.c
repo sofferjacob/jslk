@@ -67,7 +67,7 @@ static void scrollConsole() {
   uint8_t blankColor = getColor(vga_light_grey, vga_black);
   uint16_t blank = getVgaByte(0x20, blankColor);
   if (cursory >= 25) {
-    for (size_t i = 0*80; i < 24*80; i++) {
+    for (size_t i = 1*80; i < 24*80; i++) {
       terminal_buffer[i] = terminal_buffer[i+80];
     }
     for (size_t i = 24*80; i < 25*80; i++) {
