@@ -13,7 +13,7 @@ void writeStyledString(char *c, uint8_t color);
 void consolePutChar(char c, uint8_t color, size_t x, size_t y);
 void setConsoleColor(uint8_t color);
 uint8_t getColor(vga_color text, vga_color background);
-void clear_screen();
+void clear_console();
 void debugPrint(string msg);
 void kernelPrintDec(uint32_t n);
 void kernelPrintHex(uint32_t n);
@@ -71,11 +71,11 @@ void pmmInitRegion(physaddr base, size_t size);
     /*========== WARNING ===========
 Use only when necessary and in
 quick functions only, else
-interrupt latency  and kernel's 
+interrupt latency  and kernel's
 performance may be affected
 or the kernel may get stuck.
 =================================*/
-    void atomicalStart();
+void atomicalStart();
 void atomicalRelease();
 
 #endif

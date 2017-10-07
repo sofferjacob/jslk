@@ -125,7 +125,7 @@ void* pmmAllocBlock() {
 void* pmmAllocBlocks(size_t size) {
     if (pmmGetBlockCount() <= 0) {
         return 0;  // Not enough blocks
-    } 
+    }
     if (size == 1) {
         return pmmAllocBlock;
     } else if (size <= 0) {
@@ -160,9 +160,3 @@ void pmmFreeBlocks(void *p, size_t size) {
 uint32_t getPmmSize() {
     return sizeof(pmm_memory_map);
 }
-
-/*============= TODO =============
-* pmmAllocBlocks [x]
-* pmmFreeBlocks  [x]
-* Initialize memory regions at startup. [ ]
-==================================*/

@@ -12,6 +12,6 @@
 #define LICESNE "Copyright (c) 2017 Jacobo Soffer."
 #define KERNEL_BUILD_DATE __DATE__
 #define KERNEL_BUILD_NUM  2017103
-#define JSLK_API_VERSION "003"
+#define JSLK_API_VERSION "005"
 
 #endif

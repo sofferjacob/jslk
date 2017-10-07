@@ -13,18 +13,6 @@ size_t getSizeOfKernel() {
     return ((size_t)(&start) + 1) - ((size_t)(&end));
 }
 
-struct memregion
-{
-    uint32_t startLo;
-    uint32_t startHi;
-    uint32_t sizeLo;
-    uint32_t sizeHi;
-    uint32_t type;
-    uint32_t acpi_3_0;
-};
-
-typedef struct memregion memregion_t;
-
 string memTypes[] = {
     "0",
     "Available",
@@ -32,7 +20,6 @@ string memTypes[] = {
     "ACPI Reclaim",
     "ACPI NVS Memory"
 };
-
 
 int initRegions(multiboot_info_t* bootinfo) {
     // Check GRUB passed the memmory map
@@ -55,7 +42,6 @@ int initRegions(multiboot_info_t* bootinfo) {
         regNum++;
     }
 }
-
 
 int kernel_main(multiboot_info_t* bootinfo) {
     _interrupts(off);
@@ -80,7 +66,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     registerInterruptHandler(3, testHandler);
     genInterrupt(3);
     genInterrupt(4);
-    kprint("Test concluded, running test for a 5 second timer \n");
+    kprint("Starting a 5 second timer \n");
     register_timer(5.0, timerHandler);
     kprint("Test concluded, running test for a 2 second delay \n");
     delay(2);

@@ -27,8 +27,7 @@ uint8_t getColor(vga_color text, vga_color background)
 }
 
 // Function to clear screen
-void clear_screen()
-{
+void clear_console() {
     for (size_t y = 1; y < 25; y++)
     {
         for (size_t x = 0; x < 80; x++)
@@ -84,6 +83,11 @@ void setConsoleColor(uint8_t color)
 
 void consolePutChar(char c, uint8_t color, size_t x, size_t y)
 {
+    if ((y <= 0) || (y > 25)) {
+      return;
+    } else if ((x < 0) || (x > 80)) {
+      return;
+    }
     size_t index = getIndex(x, y);
     terminal_buffer[index] = getVgaByte(c, color);
 }
@@ -174,7 +178,7 @@ void startConsole()
     terminal_buffer = (uint16_t *)0xB8000; // Change to 0xCB8000 after kernel is mapped to higher half.
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
-    clear_screen();
+    clear_console();
     writeStyledString("JSLK Kernel 0.0.6 - 20171003", statusBarColor);
     for (size_t i = 0; i < (80 - strlen("JSLK Kernel 0.0.0 - 00000000")); i++)
     {

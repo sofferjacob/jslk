@@ -26,7 +26,7 @@ void system_panic(string msg) {
     atomicalStart();
     uint8_t panicColor = getColor(vga_light_grey, vga_blue);
     setConsoleColor(panicColor);
-    clear_screen();
+    clear_console();
     kprint("KERNEL PANIC \n");
     kprint("There was an error and JLK had to halt. Restart your device. \n");
     kprint("Error message: ");

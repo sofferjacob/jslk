@@ -3,6 +3,8 @@
 #include "isr.h"
 #include <stdint.h>
 
+extern void checkTimers();
+
 static size_t sys_ticks = 0;
 
 static void pitHandler() {

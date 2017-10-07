@@ -2,7 +2,6 @@
 #include "descriptor_tables.h"
 
 extern void startConsole();
-extern void checkTimers();
 
 void halInitialize() {
     startConsole();

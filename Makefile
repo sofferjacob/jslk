@@ -28,7 +28,7 @@ all: $(SOURCES) link
 
 link:
 	$(CC) -v
-	i386-elf-ld $(LDFLAGS) -o jlk.kernel $(SOURCES)
+	i386-elf-ld $(LDFLAGS) -o jslk.kernel $(SOURCES)
 
 .s.o:
 	nasm $(ASFLAGS) $<
