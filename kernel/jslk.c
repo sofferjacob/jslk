@@ -7,11 +7,12 @@
 void testHandler();
 void timerHandler();
 
+/*
 extern unsigned int* end;
-extern unsigned int* start;
+extern unsigned int* _start;
 size_t getSizeOfKernel() {
-    return ((size_t)(&start) + 1) - ((size_t)(&end));
-}
+    return ((size_t)(&_start) + 1) - ((size_t)(&end));
+} */
 
 string memTypes[] = {
     "0",
@@ -90,8 +91,10 @@ int kernel_main(multiboot_info_t* bootinfo) {
             kprint("Initialized region "); kernelPrintDec(i); kprint(" of type "); kprint(memTypes[region[i].type - 1]); kprint(" \n");
         }
     }*/
-    pmmDeinitRegion(0x100000, (getPmmSize()*512));
-    _halt();
+    // pmmDeinitRegion(0x100000, (getPmmSize()*512));
+    //_halt();
+    //delay(5.0);
+    //kprint("delay finished \n");
 }
 
 void testHandler() {

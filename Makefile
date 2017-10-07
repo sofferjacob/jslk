@@ -19,10 +19,16 @@ CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
+CRTI_OBJ:=crt/crti.o
+CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)
+CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtend.o)
+CRTN_OBJ:=crt/crtn.o
+
 include lib/jstdclib/make.config
 
-SOURCES=$(JSTDC_SOURCES) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jslk.o \
-hal/descriptor_tables.o hal/interrupt.o hal/isr.o hal/gdt.o hal/pit.o kernel/timer.o hal/pmm.o hal/atomical.o
+SOURCES= $(CRTI_OBJ) $(CRTBEGIN_OBJ) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jslk.o \
+hal/descriptor_tables.o hal/interrupt.o hal/isr.o hal/gdt.o hal/pit.o kernel/timer.o hal/pmm.o hal/atomical.o $(JSTDC_SOURCES) \
+crt/lsv.o crt/pvf.o $(CRTN_OBJ) $(CRTEND_OBJ)
 
 all: $(SOURCES) link
 
@@ -33,15 +39,21 @@ link:
 .s.o:
 	nasm $(ASFLAGS) $<
 
+.S.o:
+	$(CC) -MD -c $< -o $@ $(CFLAGS)
+
+.cc.o:
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+
 floppy:
 	echo Building floppy image...
 	hdiutil attach system.img
-	cp jlk.kernel /Volumes/NO\ NAME
+	cp jslk.kernel /Volumes/NO\ NAME
 	hdiutil detach /Volumes/NO\ NAME
 	echo system.img floppy image has been updated.
 
 clean:
-	rm -rf *.o hal/*.o kernel/*.o *.kernel lib/*.o
+	rm -rf *.o hal/*.o  hal/*.d kernel/*.o *.kernel lib/*.o crt/*.o crt/*.d
 	clear
 
 run:

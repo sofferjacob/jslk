@@ -83,11 +83,6 @@ void setConsoleColor(uint8_t color)
 
 void consolePutChar(char c, uint8_t color, size_t x, size_t y)
 {
-    if ((y <= 0) || (y > 25)) {
-      return;
-    } else if ((x < 0) || (x > 80)) {
-      return;
-    }
     size_t index = getIndex(x, y);
     terminal_buffer[index] = getVgaByte(c, color);
 }

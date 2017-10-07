@@ -1,6 +1,10 @@
 #ifndef _x86_hal_h
 #define _x86_hal_h
 
+#ifdef _cplusplus
+extern "C" {
+#endif
+
 // Include auxiliary header files
 #include "vga.h"
 #include <string.h>
@@ -77,5 +81,9 @@ or the kernel may get stuck.
 =================================*/
 void atomicalStart();
 void atomicalRelease();
+
+#ifdef _cplusplus
+}
+#endif
 
 #endif

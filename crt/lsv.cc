@@ -3,8 +3,9 @@ JSLK C++ Runtime
 lsv.cc
 Support for Local Static Variables
 
-Copyright (c) 2017 Jacobo Soffer /*
-namespace __cxxabiv1 
+Copyright (c) 2017 Jacobo Soffer*/
+
+namespace __cxxabiv1
 {
 	/* guard variables */
 
