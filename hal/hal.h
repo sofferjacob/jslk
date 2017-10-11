@@ -24,6 +24,7 @@ void debugPrint(string msg);
 void kernelPrintDec(uint32_t n);
 void kernelPrintHex(uint32_t n);
 int kprintf(string c, ...);
+void setMenubarText(string text);
 
 // Port I/O
 void outb(uint16_t port, uint8_t value);
@@ -73,7 +74,7 @@ void pmmInitRegion(physaddr base, size_t size);
 int allocFrame(pageEntry_t* page, bool kernelMode, bool rw);
 int freeFrame(pageEntry_t* page);
 void initPaging();
-void switchPageDirectory(pageDirectory_t dir);
+void switchPageDirectory(pageDirectory_t* dir);
 pageEntry_t* getPage(uint32_t addr, bool make, pageDirectory_t* dir);
 
 

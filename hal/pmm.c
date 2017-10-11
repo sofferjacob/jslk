@@ -109,22 +109,28 @@ void pmmDeinitRegion(physaddr base, size_t size) {
 
 // allocate a block, returns address of alocated block
 void* pmmAllocBlock() {
+    atomicalStart();
     if (pmmGetBlockCount() <= 0) {
-        return 0;  // No available blocks
+        // return 0;  // No available blocks
+        system_panic("Not enough memory \n");
     }
     int frame = pmmMapFirstFree();
     if (frame == -1) {
-        return 0;  // No available blocks
+        // return 0;  // No available blocks
+        system_panic("Not enough memory \n");
     }
     pmm_set(frame);
     pmm_used_blocks++;
     physaddr addr = frame * PMM_BLOCK_SIZE;
+    atomicalRelease();
     return (void*)addr;
 }
 
 void* pmmAllocBlocks(size_t size) {
+    atomicalStart();
     if (pmmGetBlockCount() <= 0) {
-        return 0;  // Not enough blocks
+        // return 0;  // Not enough blocks
+        system_panic("Not enough memory \n");
     }
     if (size == 1) {
         return pmmAllocBlock;
@@ -137,6 +143,7 @@ void* pmmAllocBlocks(size_t size) {
     }
     pmm_used_blocks += size;
     physaddr addr = frame * PMM_BLOCK_ALIGN;
+    atomicalRelease();
     return (void*)addr;
 }
 

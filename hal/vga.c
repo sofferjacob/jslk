@@ -277,3 +277,14 @@ int kprintf(string c, ...) {
     va_end(args);
     return 0;
 }
+
+void setMenubarText(string text) {
+  uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
+  size_t cursors[] = {cursorx, cursory};
+  cursorx = 0; cursory = 0;
+  writeStyledString(text, statusBarColor);
+  for (size_t i = 0; i < (80 - strlen(text)); i++)
+  {
+      writeStyledString(" ", statusBarColor);
+  }
+}

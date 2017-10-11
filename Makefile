@@ -28,7 +28,7 @@ include lib/jstdclib/make.config
 
 SOURCES= $(CRTI_OBJ) $(CRTBEGIN_OBJ) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jslk.o \
 hal/descriptor_tables.o hal/interrupt.o hal/isr.o hal/gdt.o hal/pit.o kernel/timer.o hal/pmm.o hal/atomical.o $(JSTDC_SOURCES) \
-crt/lsv.o crt/pvf.o $(CRTN_OBJ) $(CRTEND_OBJ)
+crt/lsv.o crt/pvf.o hal/paging.o $(CRTN_OBJ) $(CRTEND_OBJ)
 
 all: $(SOURCES) link
 

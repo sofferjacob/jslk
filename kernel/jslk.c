@@ -76,6 +76,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     pmmInit(memsize, getPmmSize());
     kprint("Started System PMM with "); kernelPrintDec(memsize / 1024); kprint(" kb of physical memory \n");
     initRegions(bootinfo);
+    initPaging();
     // memregion_t* region = (memregion_t*)0x1000;
     /*for (int i = 0; i < 15; ++i) {
 

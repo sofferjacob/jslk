@@ -1,6 +1,8 @@
 #ifndef _x86_paging_hal
 #define _x86_paging_hal
 
+#include <stdint.h>
+
 typedef struct pageEntry {
   uint32_t present : 1;
   uint32_t rw : 1;
