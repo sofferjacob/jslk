@@ -20,6 +20,7 @@ int allocFrame(pageEntry_t* page, bool kernelMode, bool rw) {
     return 1;
   }
   atomicalStart();
+  uint32_t index = pmmMapFirstFree();
   uint32_t physFrame = (uint32_t)pmmAllocBlock();
   if (!physFrame) {
     system_panic("Out of memory");
@@ -27,7 +28,7 @@ int allocFrame(pageEntry_t* page, bool kernelMode, bool rw) {
   page->present = 1;
   page->rw = (rw)?1:0;
   page->mode = (kernelMode)?0:1;
-  page->frame = physFrame;
+  page->frame = index;
   atomicalRelease();
 }
 
@@ -60,13 +61,13 @@ void initPaging() {
 }
 
 // THE BUG IS HERE!!
-void switchPageDirectory(pageDirectory_t* dir) {
-  currentDirectory = dir;
-  asm volatile("mov %0, %%cr3":: "r"(&dir->physicalTables));
-  uint32_t cr0;
-  asm volatile("mov %%cr0, %0": "=r"(cr0));
-  cr0 |= 0x80000000; // Enable paging!
-  asm volatile("mov %0, %%cr0":: "r"(cr0));
+void switchPageDirectory(pageDirectory_t *dir) {
+   currentDirectory = dir;
+   asm volatile("mov %0, %%cr3":: "r"(&dir->physicalTables));
+   uint32_t cr0;
+   asm volatile("mov %%cr0, %0": "=r"(cr0));
+   cr0 |= 0x80000000; // Enable paging!
+   asm volatile("mov %0, %%cr0":: "r"(cr0));
 }
 
 pageEntry_t* getPage(uint32_t addr, bool make, pageDirectory_t* dir) {
