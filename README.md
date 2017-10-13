@@ -1,6 +1,9 @@
 # JSLK
 Simple kernel for x86 I am writing with the objective of learning a bit more on how OS's work and to also improve my coding skills.
 
+### C++ Branch
+The purpose of this branch is to improve compatibility and integration with C++.
+
 ## General Objectives
 I hope to at least get the kernel to do the following:
 * File System and VFS implementation.

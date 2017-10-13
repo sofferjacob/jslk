@@ -4,6 +4,8 @@
 #include <timer.h>
 #include "multiboot.h"
 
+extern "C" {
+
 void testHandler();
 void timerHandler();
 
@@ -105,4 +107,6 @@ void testHandler() {
 void timerHandler() {
     kprint("Executing listener() for timer 0 \n");
     kernelPrintDec(readSystemTime()); kprint("\n");
+}
+
 }
