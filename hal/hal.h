@@ -48,10 +48,12 @@ void _syscritical(mode_t mode);
 void system_panic(string msg);
 
 // System interrupt handler
+#define TOTAL_INTERRUPTS 47
 void registerInterruptHandler(uint8_t num, void(*hiHand));
 void addDescription(uint8_t num, string description);
 void genInterrupt(uint8_t num);
 string getintDescription();
+uint8_t findFreeInterrupt();
 
 // System Timer Related functions
 void start_pit(uint32_t freq);

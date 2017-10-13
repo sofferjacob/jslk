@@ -13,6 +13,7 @@ typedef struct registers
 typedef struct highHandler {
     bool hasHandler;
     void (*handler)();
+    bool isChained;
 } highHandler_t;
 
 #define IRQ0 32

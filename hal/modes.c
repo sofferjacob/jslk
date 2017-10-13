@@ -28,7 +28,8 @@ void system_panic(string msg) {
     setConsoleColor(panicColor);
     clear_console();
     kprint("KERNEL PANIC \n");
-    kprint("There was an error and JLK had to halt. Restart your device. \n");
+    kprint("An error ocurred and JSLK had to halt. Restart your device. \n");
+    kprint("You may submit a bug report at: https://github.com/sofferjacob/jslk/issues \n");
     kprint("Error message: ");
     kprint(msg);
     _halt();

@@ -1,8 +1,3 @@
-//
-// isr.c -- High level interrupt service routines and interrupt request handlers.
-//          Part of this code is modified from Bran's kernel development tutorials.
-//          Rewritten for JamesM's kernel development tutorials.
-//
 #include "isr.h"
 #include "hal.h"
 
@@ -57,10 +52,13 @@ void isr_handler(registers_t regs) {
     }
 }
 
-void registerInterruptHandler(uint8_t num, void(*hiHand))
-{
+int registerInterruptHandler(uint8_t num, void(*hiHand)) {
+    if (hiIntHandler[num].isChained == true) {
+        return 1;
+    }
     hiIntHandler[num].hasHandler = true;
     hiIntHandler[num].handler = hiHand;
+    return 0;
 }
 
 void addDescription(uint8_t num, string description)
@@ -87,5 +85,29 @@ void irq_handler(registers_t regs) {
     }
 }
 
+uint8_t findFreeInterrupt() {
+    atomicalStart();
+    for (uint8_t i = 48; i < TOTAL_INTERRUPTS; i++) {
+        if (hiIntHandler[i].hasHandler != true) {
+            atomicalRelease();
+            return i;
+        }
+    }
+    atomicalRelease();
+    return 0;
+}
+
+
+
+/*
+void cpuFaultHandler() {
+    atomicalStart();
+    uint32_t intno = regs.int_no;
+    // Just as a temporary meassure
+    switch (intno) {
+        case 10:
+
+    }
+} */
 
 
