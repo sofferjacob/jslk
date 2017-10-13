@@ -1,4 +1,6 @@
 # JSLK
+**Kernel Status:** Failing to compile.
+
 Simple kernel for x86 I am writing with the objective of learning a bit more on how OS's work and to also improve my coding skills.
 
 ### C++ Branch
