@@ -143,7 +143,7 @@ uint8_t findFreeInterrupt() {
     return 0;
 }
 
-void registerChainedInterrupt(uint8_t num, void(*hihand)) {
+void registerChainedInterrupt(uint8_t num, hiHand_t handler) {
 
 }
 

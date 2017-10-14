@@ -26,6 +26,7 @@ typedef struct chainedInterrupt {
     uint8_t totalHandlers;
     hiHand_t* handlers;
     bool freeProtect;
+    bool chainLock;  // if this is set, no more handlers will be added to this interrupt.
 } chainedInterrupt_t;
 
 #define IRQ0 32
