@@ -253,7 +253,8 @@ int kprintf(string c, ...) {
     va_list args;
     va_start(args, *c);
     uint8_t argsNum = 0;
-    uint8_t integerArgs = 0;
+    int32_t integerArgs = 0;
+    uint32_t hexArgs = 0;
     string strArgs;
     for (size_t i = 0; c[i]; i++) {
         if (c[i] == '%') argsNum++;
@@ -263,11 +264,14 @@ int kprintf(string c, ...) {
         if (c[i] == '%') {
             if (c[i + 1] == 'i') {
                 integerArgs = va_arg(args, int);
-                kernelPrintDec((uint32_t)integerArgs);
+                kernelPrintDec(integerArgs);
             }
             else if (c[i + 1] == 's') {
                 strArgs = va_arg(args, string);
                 kprint(strArgs);
+            } else if (c[i + 1] == 'h') {
+                hexArgs = va_arg(args, uint32_t);
+                kernelPrintHex(hexArgs);
             }
             i += 2;
         }

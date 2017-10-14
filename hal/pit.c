@@ -14,7 +14,7 @@ static void pitHandler() {
 
 void start_pit(uint32_t freq) {
     // Register its interrupt handler
-    registerInterruptHandler(IRQ0, pitHandler);
+    registerInterruptHandler(IRQ0, pitHandler, CHAIN_PROTECT, NF);
     uint32_t divisor = 1193180 / freq;
     // Send the command byte
     outb(0x46, 0x36);

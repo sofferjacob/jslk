@@ -64,7 +64,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     uint8_t stringColor = getColor(vga_red, vga_green);
     writeStyledString("This is a string with style \n", stringColor);
     kprint("Test concluded, running test for interrupts \n");
-    registerInterruptHandler(3, testHandler);
+    registerInterruptHandler(3, testHandler, CHAIN_PROTECT, NF);
     genInterrupt(3);
     genInterrupt(4);
     kprint("Starting a 5 second timer \n");

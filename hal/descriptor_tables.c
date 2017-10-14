@@ -135,9 +135,9 @@ static void init_idt()
     idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
 
     // Register high level handlers
-    registerInterruptHandler(10, intFaultHandler);
-    registerInterruptHandler(11, intFaultHandler);
-    registerInterruptHandler(12, intFaultHandler);
+    registerInterruptHandler(10, intFaultHandler, CHAIN_PROTECT, NF);
+    registerInterruptHandler(11, intFaultHandler, CHAIN_PROTECT, NF);
+    registerInterruptHandler(12, intFaultHandler, CHAIN_PROTECT, NF);
 
     idt_flush((uint32_t)&idt_ptr);
     asm volatile ("sti");

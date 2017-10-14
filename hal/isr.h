@@ -15,6 +15,7 @@ typedef struct registers
 typedef void (*hiHand_t)();
 
 typedef struct hiInterrupt {
+    bool initialized;
     bool hasHandler;
     hiHand_t handler;
     bool isChained;
@@ -22,12 +23,18 @@ typedef struct hiInterrupt {
 } hiInterrupt_t;
 
 typedef struct chainedInterrupt {
-    // bool initialized;
+    bool initialized;
     uint8_t totalHandlers;
     hiHand_t* handlers;
     bool freeProtect;
     bool chainLock;  // if this is set, no more handlers will be added to this interrupt.
 } chainedInterrupt_t;
+
+#define CHAINED_INTERRUPT 1
+#define CHAIN_PROTECT     2
+#define FREE_PROTECT      3
+#define CHAIN_LOCK        4
+#define NF                5  // No more flags
 
 #define IRQ0 32
 #define IRQ1 33

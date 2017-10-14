@@ -55,7 +55,7 @@ void initPaging() {
     allocFrame(getPage(identityIndex, 1, kernelDirectory), 0, 0);
     identityIndex += 0x1000/*VM_PAGE_SIZE*/;
   }
-  registerInterruptHandler(14, pageFault);
+  registerInterruptHandler(14, pageFault, CHAIN_PROTECT, NF);
   // Finally enable paging
   switchPageDirectory(kernelDirectory);
 }
