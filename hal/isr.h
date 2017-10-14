@@ -10,11 +10,23 @@ typedef struct registers
     uint32_t eip, cs, eflags, useresp, ss;           // Pushed by the processor automatically.
 } registers_t;
 
-typedef struct highHandler {
+// All of this should be migrated to C++ when possible
+
+typedef void (*hiHand_t)();
+
+typedef struct hiInterrupt {
     bool hasHandler;
-    void (*handler)();
+    hiHand_t handler;
     bool isChained;
-} highHandler_t;
+    bool chainProtect;
+} hiInterrupt_t;
+
+typedef struct chainedInterrupt {
+    // bool initialized;
+    uint8_t totalHandlers;
+    hiHand_t* handlers;
+    bool freeProtect;
+} chainedInterrupt_t;
 
 #define IRQ0 32
 #define IRQ1 33

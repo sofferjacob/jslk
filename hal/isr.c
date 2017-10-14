@@ -1,9 +1,12 @@
 #include "isr.h"
 #include "hal.h"
+#include <stdlib.h>
+#include <va_list.h> // for when I add flags to registerInterrupt()
 
 #define KERNEL_DEBUG
 
-static highHandler_t hiIntHandler[256];
+static hiInterrupt_t hiIntHandler[TOTAL_INTERRUPTS];
+static chainedInterrupt_t chainedInterrupts[TOTAL_INTERRUPTS];
 
 static string intDescription[] = {
     "Division by zero",
@@ -53,11 +56,54 @@ void isr_handler(registers_t regs) {
 }
 
 int registerInterruptHandler(uint8_t num, void(*hiHand)) {
-    if (hiIntHandler[num].isChained == true) {
+    if (num > TOTAL_INTERRUPTS) {
+        return 1;
+    } else if (hiIntHandler[num].isChained == true) {
+        return 1;
+    } else if (hiIntHandler[num].taken == true) {
         return 1;
     }
     hiIntHandler[num].hasHandler = true;
     hiIntHandler[num].handler = hiHand;
+    hiIntHandler[num].isChained = false;
+    return 0;
+}
+
+int freeInterrupt(uint8_t num) {
+    if (hiIntHandler[num].isChained == true) {
+        // Call the correct function
+        freeChainedInterrupt(num);
+    } else if (hiIntHandler[num].hasHandler != true) {
+        // The interrupt is already free
+        return 0;
+    }
+    atomicalStart();
+    hiIntHandler[num].hasHandler = false;
+    hiIntHandler[num].handler = NULL;
+    atomicalRelease();
+    return 0;
+}
+
+int freeChainedInterrupt(uint8_t num) {
+    if (chainedInterrupts[num].freeProtect == true) {
+        return 1;
+    }
+    atomicalStart();
+    hiIntHandler[num].hasHandler = false;
+    hiIntHandler[num].isChained = false;
+    hiIntHandler[num].chainProtect = true;
+    atomicalRelease();
+    if (!chainedInterrupts[num].totalHandlers) {
+        chainedInterrupts[num].handlers = NULL;
+    }
+    while (chainedInterrupts[num].totalHandlers) {
+        chainedInterrupts[num].handlers[chainedInterrupts[num].totalHandlers] = NULL;
+        if ((chainedInterrupts[num].totalHandlers - 1) == 0) {
+            chainedInterrupts[num].handlers = NULL;
+        }
+        chainedInterrupts[num].totalHandlers--;
+    }
+    hiIntHandler[num].chainProtect = false;
     return 0;
 }
 
@@ -95,6 +141,10 @@ uint8_t findFreeInterrupt() {
     }
     atomicalRelease();
     return 0;
+}
+
+void registerChainedInterrupt(uint8_t num, void(*hihand)) {
+
 }
 
 
