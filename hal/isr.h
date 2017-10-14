@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
+#include "hal.h"
 
 typedef struct registers
 {
@@ -11,9 +12,6 @@ typedef struct registers
 } registers_t;
 
 // All of this should be migrated to C++ when possible
-
-typedef void (*hiHand_t)();
-
 typedef struct hiInterrupt {
     bool initialized;
     bool hasHandler;
@@ -29,12 +27,6 @@ typedef struct chainedInterrupt {
     bool freeProtect;
     bool chainLock;  // if this is set, no more handlers will be added to this interrupt.
 } chainedInterrupt_t;
-
-#define CHAINED_INTERRUPT 1
-#define CHAIN_PROTECT     2
-#define FREE_PROTECT      3
-#define CHAIN_LOCK        4
-#define NF                5  // No more flags
 
 #define IRQ0 32
 #define IRQ1 33

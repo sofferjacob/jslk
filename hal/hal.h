@@ -49,6 +49,12 @@ void system_panic(string msg);
 
 // System interrupt handler
 #define TOTAL_INTERRUPTS 47
+#define CHAINED_INTERRUPT 1
+#define CHAIN_PROTECT 2
+#define FREE_PROTECT 3
+#define CHAIN_LOCK 4
+#define NF 5 // No more flags
+typedef void (*hiHand_t)();
 int registerInterruptHandler(uint8_t num, hiHand_t handler, ...);
 void addDescription(uint8_t num, string description);
 void genInterrupt(uint8_t num);

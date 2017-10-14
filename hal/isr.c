@@ -49,7 +49,7 @@ void chainedIsrHandler(registers_t regs) {
         return;
     }
     for (size_t i = 0; i < chainedInterrupts[regs.int_no].totalHandlers; i++) {
-        handlers[i]();
+        chainedInterrupts[regs.int_no].handlers[i]();
     }
 }
 
@@ -144,7 +144,7 @@ int registerInterruptHandler(uint8_t num, hiHand_t handler, ...) {
         if (chainedInterrupts[num].initialized != true)
         {
             chainedInterrupts[num].initialized = true;
-            chainedInterrupt.totalHandlers = 0;
+            chainedInterrupts[num].totalHandlers = 0;
         }
         else
         {
@@ -172,7 +172,7 @@ int registerInterruptHandler(uint8_t num, hiHand_t handler, ...) {
             return 1;
         }
         hiIntHandler[num].hasHandler = true;
-        hiInthandler[num].handler = handler;
+        hiIntHandler[num].handler = handler;
         hiIntHandler[num].isChained = false;
         hiIntHandler[num].initialized = true;
         if (chainProtect = true)
@@ -185,6 +185,9 @@ int registerInterruptHandler(uint8_t num, hiHand_t handler, ...) {
     atomicalRelease();
     return 1;
 }
+
+// Function prototype
+int clearChainedInterrupt(uint8_t num);
 
 int clearInterrupt(uint8_t num) {
     if (hiIntHandler[num].isChained == true) {
