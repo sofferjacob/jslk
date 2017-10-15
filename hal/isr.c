@@ -48,7 +48,7 @@ void chainedIsrHandler(registers_t regs) {
         chainedInterrupts[regs.int_no].handlers[0]();
         return;
     }
-    for (size_t i = 0; i < chainedInterrupts[regs.int_no].totalHandlers; i++) {
+    for (size_t i = 0; i < chainedInterrupts[regs.int_no].totalHandlers + 1; i++) {
         chainedInterrupts[regs.int_no].handlers[i]();
     }
 }

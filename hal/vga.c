@@ -282,6 +282,50 @@ int kprintf(string c, ...) {
     return 0;
 }
 
+int cprintf(string c, uint8_t color, ...) {
+    uint8_t originalColor = console_color;
+    console_color = color;
+    va_list args;
+    va_start(args, color);
+    uint8_t argsNum = 0;
+    int32_t integerArgs = 0;
+    uint32_t hexArgs = 0;
+    string strArgs;
+    for (size_t i = 0; c[i]; i++)
+    {
+        if (c[i] == '%')
+            argsNum++;
+    }
+    size_t i = 0;
+    while (c[i])
+    {
+        if (c[i] == '%')
+        {
+            if (c[i + 1] == 'i')
+            {
+                integerArgs = va_arg(args, int);
+                kernelPrintDec(integerArgs);
+            }
+            else if (c[i + 1] == 's')
+            {
+                strArgs = va_arg(args, string);
+                kprint(strArgs);
+            }
+            else if (c[i + 1] == 'h')
+            {
+                hexArgs = va_arg(args, uint32_t);
+                kernelPrintHex(hexArgs);
+            }
+            i += 2;
+        }
+        kputc(c[i]);
+        i++;
+    }
+    va_end(args);
+    console_color = originalColor;
+    return 0;
+}
+
 void setMenubarText(string text) {
   uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
   size_t cursors[] = {cursorx, cursory};

@@ -13,5 +13,6 @@
 #define KERNEL_BUILD_DATE __DATE__
 #define KERNEL_BUILD_NUM  2017103
 #define JSLK_API_VERSION "005"
+#define JSLK_API_NUM 006
 
 #endif

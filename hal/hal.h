@@ -24,6 +24,7 @@ void debugPrint(string msg);
 void kernelPrintDec(uint32_t n);
 void kernelPrintHex(uint32_t n);
 int kprintf(string c, ...);
+int cprintf(string c, uint8_t color, ...);
 void setMenubarText(string text);
 
 // Port I/O

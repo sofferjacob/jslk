@@ -2,10 +2,14 @@
 #include <types.h>
 #include <version.h>
 #include <timer.h>
+#include <va_list.h>
 #include "multiboot.h"
 
 void testHandler();
 void timerHandler();
+void c1();
+void c2();
+void c3();
 
 /*
 extern unsigned int* end;
@@ -35,6 +39,7 @@ int initRegions(multiboot_info_t* bootinfo) {
         }
         kprint("Found section ");kernelPrintDec(regNum);kprint(" of type ");kprint(memTypes[mmap->type]);kprint(". \n");
         kprint("Section base: ");kernelPrintHex(mmap->base_addr_low); kprint("\n");
+        kprintf("Found section %i of type %s with a base of %h", regNum, memTypes[mmap->type], mmap->base_addr_low);
         if (mmap->type == 1) {
           pmmInitRegion((physaddr)mmap->base_addr_low, (size_t)mmap->size);
           kprint("Initialized region in PMM \n");
@@ -55,7 +60,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     #else
     kprintf("Kernel version: %i.%i.%i.%i-%s \n", KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE, KERNEL_VERSION_EXTRA, KERNEL_RELEASE_TYPE);
     #endif
-    kprint("Kernel API version: "); kprint(JSLK_API_VERSION); kprint("\n");
+    kprintf("Kernel API version: %s \n", JSLK_API_VERSION);
     kprint("Build number: "); kernelPrintDec(KERNEL_BUILD_NUM); kprint("\n");
     if ((bootinfo->flags & MULTIBOOT_INFO_MEM_MAP)) {
         kprint("Bit is set \n");
@@ -67,6 +72,14 @@ int kernel_main(multiboot_info_t* bootinfo) {
     registerInterruptHandler(3, testHandler, CHAIN_PROTECT, NF);
     genInterrupt(3);
     genInterrupt(4);
+    kprint("Running test for chained interrupts: \n");
+    registerInterruptHandler(4, c1, CHAINED_INTERRUPT, NF);
+    registerInterruptHandler(4, c2, CHAINED_INTERRUPT, NF);
+    registerInterruptHandler(4, c3, CHAINED_INTERRUPT, NF);
+    genInterrupt(4);
+    delay(5.0);
+    clearInterrupt(3);
+    clearInterrupt(4);
     kprint("Starting a 5 second timer \n");
     register_timer(5.0, timerHandler);
     kprint("Test concluded, running test for a 2 second delay \n");
@@ -76,26 +89,22 @@ int kernel_main(multiboot_info_t* bootinfo) {
     pmmInit(memsize, getPmmSize());
     kprint("Started System PMM with "); kernelPrintDec(memsize / 1024); kprint(" kb of physical memory \n");
     initRegions(bootinfo);
-    initPaging();
-    // memregion_t* region = (memregion_t*)0x1000;
-    /*for (int i = 0; i < 15; ++i) {
+    cprintf("Cprintf test %i \n", stringColor, KERNEL_VERSION_EXTRA);
+    kprint("test concluded \n");
+    // initPaging();
+}
 
-        //! sanity check; if type is > 4 mark it reserved
-        if (region[i].type > 4)
-            region[i].type = 1;
+void c1() {
+    uint16_t a = 21;
+    kprintf("Inside first handler %i \n", 21);
+}
 
-        //! if start address is 0, there is no more entries, break out
-        if (i > 0 && region[i].startLo == 0)
-            break;
-        if (region[i].type == 1) {
-            pmmInitRegion(region[i].startLo, region[i].sizeLo);
-            kprint("Initialized region "); kernelPrintDec(i); kprint(" of type "); kprint(memTypes[region[i].type - 1]); kprint(" \n");
-        }
-    }*/
-    // pmmDeinitRegion(0x100000, (getPmmSize()*512));
-    //_halt();
-    //delay(5.0);
-    //kprint("delay finished \n");
+void c2() {
+    kprint("Inside second handler \n");
+}
+void c3()
+{
+    kprint("Inside third handler \n");
 }
 
 void testHandler() {
@@ -103,6 +112,5 @@ void testHandler() {
 }
 
 void timerHandler() {
-    kprint("Executing listener() for timer 0 \n");
-    kernelPrintDec(readSystemTime()); kprint("\n");
+    kprintf("Executing listener() for timer 0. System time: %i \n", readSystemTime());
 }
