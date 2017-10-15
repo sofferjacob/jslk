@@ -39,10 +39,9 @@ int initRegions(multiboot_info_t* bootinfo) {
         }
         kprint("Found section ");kernelPrintDec(regNum);kprint(" of type ");kprint(memTypes[mmap->type]);kprint(". \n");
         kprint("Section base: ");kernelPrintHex(mmap->base_addr_low); kprint("\n");
-        kprintf("Found section %i of type %s with a base of %h", regNum, memTypes[mmap->type], mmap->base_addr_low);
         if (mmap->type == 1) {
           pmmInitRegion((physaddr)mmap->base_addr_low, (size_t)mmap->size);
-          kprint("Initialized region in PMM \n");
+          kprintf("Initialized region %i\n", regNum);
         }
         mmap = (memory_map_t*)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
         regNum++;
