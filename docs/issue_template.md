@@ -1,7 +1,3 @@
-# Issue Template 
-Every reported issue should follow the following template when ppossible. If you are submiting a todo or other kinds of reports, certain parts of the template may be omitted. 
----
-
 ### Expected behavior
 Short description on what was expected to happen.
 
