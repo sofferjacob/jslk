@@ -36,6 +36,12 @@ link:
 	$(CC) -v
 	i386-elf-ld $(LDFLAGS) -o jslk.kernel $(SOURCES)
 
+travis: $(SOURCES) linktrav
+
+linktrav:
+	$(HOME)/opt/cross/bin/i386-elf-gcc -v
+	$(HOME)/opt/cross/bin/i386-elf-ld $(LDFLAGS) -o jslk.kernel $(SOURCES)
+	
 .s.o:
 	nasm $(ASFLAGS) $<
 

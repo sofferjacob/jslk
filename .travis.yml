@@ -9,4 +9,4 @@ script:
 - git clone https://github.com/sofferjacob/jslk.git
 - cd jslk
 - echo $PATH
-- make
+- make travis
