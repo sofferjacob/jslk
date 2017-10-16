@@ -1,14 +1,10 @@
 language: c
-os: osx
-
 before_install:
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  brew install nasm
-  wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_mac_v.1.0.0.zip
-  unzip -a sierra_toolchain_mac_v.1.0.0.zip
-  export PATH=$PATH:$HOME/opt/cross/bin
-
+- sudo apt-get install nasm
+install: 
+- wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
+- tar -xvf sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
 script:
-  cd
-  cd sofferjacob/jslk
-  make clean all floppy
+- git clone https://github.com/sofferjacob/jslk.git
+- cd jslk
+- make
