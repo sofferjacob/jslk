@@ -1,23 +1,99 @@
-# JSLK
-Simple kernel for x86 I am writing with the objective of learning a bit more on how OS's work and to also improve my coding skills.
+# JSLK Kernel
 
-**Kernel Status:** Build succeded, kernel crashes.
+JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (although portability has been taken into consideration). It was started in August 2017 with the objective of learning how a computer operating system works and to improve the coding skills of the main developer. The kernel is mostly written in C with some bits of assembly and has partial compatibility with C++ (a runtime is provided). Some of its features are: extensive HAL API, System V ABI compatibility, memory management, interrupt handling, VGA driver, timers and delays, some synchronization primitives, a growing home-made C library, etc.
 
-## General Objectives
-I hope to at least get the kernel to do the following:
-- [ ] File System and VFS implementation.
-- [ ] Multitasking.
-- [ ] Loading an ELF program.
+**Kernel Status:** Build succeeds.
 
-I am not making this kernel to be portable nor to replace Linux or become something, I am just doing it with the objective of learning.
+## Directory Structure
+`crt`: C/C++ Runtime.
+`docs`: Some documentation (writing in progress, thus incomplete).
+`floppyfs`: Filesystem used to build floppy image.
+`hal`: Hardware Abstraction Layer and API.
+`include`: Public kernel headers.
+`kernel`: Main kernel.
+`lib`: Kernel Libraries.
+`tools`: Shouldn't be there, just ignore it.
 
-## A note on portability
-Although the kernel is being designed with portability in mind, about now the kernel is not as portable as it would be with a 100% portable design. Still, porting it should be easy.
+## Getting Started
 
-## Language Compatibility
-The kernel is compatible with the System V ABI and is mostly programmed in C to keep the main codebase simple. Still the kernel supports being programmed in C++ as well with some limitations:
-* Placement `new` and `delete` cannot be used yet.
-* Exceptions are not supported yet.
-Everything else should work fine.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-> This kernel is released under the terms of the GNU GPL3, a copy of the original documentation should be provided with every derivatives or redistributions of this work.
+### Prerequisites
+
+What things you need to install the software and how to install them
+
+```
+Give examples
+```
+
+### Installing
+
+A step by step series of examples that tell you have to get a development env running
+
+Say what the step will be
+
+```
+Give the example
+```
+
+And repeat
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo
+
+## Running the tests
+
+Explain how to run the automated tests for this system
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+
+## Authors
+
+* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Hat tip to anyone who's code was used
+* Inspiration
+* etc

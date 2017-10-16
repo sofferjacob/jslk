@@ -1,0 +1,6 @@
+ATRIBUTIONS
+============
+The following people/projects have made this kernel possible:
+* James 'M Tutorials.
+* Broken Thorn Tutorials.
+* OSDev Wiki.
