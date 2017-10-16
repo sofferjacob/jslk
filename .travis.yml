@@ -1,10 +1,13 @@
 language: c
+dist: trusty
+sudo: required
+
 before_install:
 - sudo apt-get install nasm
 install:
 - wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
 - tar -xvf sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
-- mv opt/cross/bin/* /bin
+- sudo mv opt/cross/bin/* /bin
 - export PATH=$PATH:opt/cross/bin
 script:
 - git clone https://github.com/sofferjacob/jslk.git
