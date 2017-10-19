@@ -33,16 +33,16 @@ JSLK can be built on any UNIX like system, such as any Linux distribution, FreeB
 
 On Linux:
 ```
-sudo apt-get install nasm wget git  # Change apt-get install for whatever package manager you are using.
-wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
+$ sudo apt-get install nasm wget git  # Change apt-get install for whatever package manager you are using.
+$ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
 ```
 
 On macOS:
 ```
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew install nasm
-brew install wget
-wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_mac_v.1.0.0.zip
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ brew install nasm
+& brew install wget
+$ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_mac_v.1.0.0.zip
 ```
 
 On other operating systems the packages:
@@ -56,25 +56,25 @@ Can be built from source or installed from  other sources.
 
 To build JSLK from source copy and paste the following commands in a terminal prompt:
 ```
-git clone https://github.com/sofferjacob/jslk.git
-cd jslk
-make
+$ git clone https://github.com/sofferjacob/jslk.git
+$ cd jslk
+$ make
 ```
 > Note: For this to work, your toolchain must be in your path (you can change this in the Makefile).
 
 To clean the source tree:
 ```
-make clean
+$ make clean
 ```
 
 And to build a floppy image on macOS:
 ```
-make floppy
+$ make floppy
 ```
 
 On Linux:
 ```
-make image
+$ make image
 ```
 ## Testing
 
@@ -87,7 +87,7 @@ Machine is recommended.
 Build the kernel and a floppy image, then:
 
 ```
-make run
+$ make run
 ```
 
 ## Contributing

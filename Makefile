@@ -36,12 +36,6 @@ link:
 	$(CC) -v
 	i386-elf-ld $(LDFLAGS) -o jslk.kernel $(SOURCES)
 
-travis: $(SOURCES) linktrav
-
-linktrav:
-	$(HOME)/opt/cross/bin/i386-elf-gcc -v
-	$(HOME)/opt/cross/bin/i386-elf-ld $(LDFLAGS) -o jslk.kernel $(SOURCES)
-	
 .s.o:
 	nasm $(ASFLAGS) $<
 
@@ -64,3 +58,12 @@ clean:
 
 run:
 	qemu-system-i386 -fda system.img
+
+image:
+	echo Updating image...
+	sudo /sbin/losetup /dev/loop0 floppy.img
+	sudo mount /dev/loop0 /mnt2
+	sudo cp sierra.kernel /mnt2/kernel
+	sudo umount /dev/loop0
+	sudo /sbin/losetup -d /dev/loop0
+	echo Image updated.
