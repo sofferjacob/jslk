@@ -5,7 +5,7 @@ JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (al
 **Kernel Status:** Build succeeds.
 
 [![Build Status](https://travis-ci.org/sofferjacob/jslk.svg?branch=master)](https://travis-ci.org/sofferjacob/jslk)
-[![GitHub issues](https://img.shields.io/github/issues/badges/shields.svg)]()
+[![GitHub license](https://img.shields.io/badge/license-GPL3-yellow.svg)]()
 
 ## Directory Structure
 `crt`: C/C++ Runtime.
