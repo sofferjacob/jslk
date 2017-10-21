@@ -24,6 +24,11 @@ JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (al
 
 `tools`: Shouldn't be there, just ignore it.
 
+## Supported Architectures
+* x86 (`x86common`).
+* x86_64 (coming soon) (`x64_common`).
+* Raspberry Pi 1/2/zero (coming soon) (`bcm28common`).
+
 ## Building for x86
 
 These instructions will help you build JSLK Kernel for the x86 platform.
