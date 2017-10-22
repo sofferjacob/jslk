@@ -39,7 +39,7 @@ JSLK can be built on any UNIX like system, such as any Linux distribution, FreeB
 
 On Linux:
 ```
-$ sudo apt-get install nasm wget git  # Change apt-get install for whatever package manager you are using.
+$ sudo apt-get install nasm wget git qemu  # Change apt-get install for whatever package manager you are using.
 $ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
 ```
 
@@ -47,13 +47,15 @@ On macOS:
 ```
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 $ brew install nasm
-& brew install wget
+$ brew install wget
+$ brew install qemu
 $ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_mac_v.1.0.0.zip
 ```
 
 On other operating systems the packages:
 * git
 * nasm
+* qemu
 * i386-elf toolchain (can be built using the scripts [here](https://github.com/sofferjacob/edison-toolchain))
 
 Can be built from source or installed from  other sources.
@@ -64,6 +66,7 @@ To build JSLK from source copy and paste the following commands in a terminal pr
 ```
 $ git clone https://github.com/sofferjacob/jslk.git
 $ cd jslk
+$ export TARGET=x86common
 $ make
 ```
 > Note: For this to work, your toolchain must be in your path (you can change this in the Makefile).
