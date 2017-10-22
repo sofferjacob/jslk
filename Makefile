@@ -20,7 +20,7 @@ ASFLAGS=-felf
 
 include lib/jstdclib/make.config
 
-SOURCES= $(CRTI_OBJ) $(CRTBEGIN_OBJ) kernel/jslk.o \
+SOURCES= $(CRTI_OBJ) $(CRTBEGIN_OBJ) $(TARGET_SOURCES) kernel/jslk.o \
  kernel/timer.o  $(JSTDC_SOURCES) \
 crt/lsv.o crt/pvf.o  $(CRTN_OBJ) $(CRTEND_OBJ)
 
