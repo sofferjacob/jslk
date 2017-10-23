@@ -12,13 +12,20 @@
 .long FLAGS
 .long CHECKSUM
 
+# Reserve a stack for the initial thread.
+.section .bss
+.align 16
+stack_bottom:
+.skip 16384 # 16 KiB
+stack_top:
+
 # The kernel entry point.
 .section .text
 .global _start
 .type _start, @function
 _start:
+	movl $stack_top, %esp
 	push %ebx
-
 	# Call the global constructors.
 	call _init
 
