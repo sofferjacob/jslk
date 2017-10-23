@@ -86,6 +86,12 @@ On Linux:
 ```
 $ make image
 ```
+
+You can also pass the target as an argument to make instead of defining it as a variable:
+```
+$ make TARGET=x64common clean all floppy run
+```
+
 ## Testing
 
 Although JSLK can be tested on real hardware, it is not recommended, since a bug in the kernel can brick
