@@ -7,6 +7,7 @@
 * ...
 
 ### Affected Areas of the Project
-[ ] Kernel
-[ ] HAL
-[ ] Libraries
+- [ ] Kernel
+- [ ] HAL
+- [ ] Libraries
+- [ ] Build System

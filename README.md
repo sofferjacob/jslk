@@ -4,8 +4,8 @@ JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (al
 
 [![Build Status](https://img.shields.io/badge/kernel-passing-brightgreen.svg)](https://github.com/sofferjacob/jslk)
 [![GitHub license](https://img.shields.io/badge/license-GPL3-yellow.svg)](https://github.com/sofferjacob/jslk/blob/master/LICENSE)
-[![Project Status](https://img.shields.io/badge/project-active_development-brightgreen.svg)](https://github.com/sofferjacob/jslk)
-[![Kernel Version](https://img.shields.io/badge/kernel-v0.0.6.2pa-blue.svg)](https://github.com/sofferjacob/jslk)
+[![Project Status](https://img.shields.io/badge/project-active_development-brightgreen.svg)](https://github.com/sofferjacob/jslk/blob/x64/docs/status.md)
+[![Kernel Version](https://img.shields.io/badge/kernel-v0.0.6.2pa-blue.svg)](https://github.com/sofferjacob/jslk/releases)
 
 ## Directory Structure
 `crt`: C/C++ Runtime.
@@ -22,14 +22,15 @@ JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (al
 
 `lib`: Kernel Libraries.
 
-`tools`: Shouldn't be there, just ignore it.
+`tools`: Shouldn't be there, just ignore it for now.
 
 ## Supported Architectures
 * x86 (`x86common`).
-* x86_64 (coming soon) (`x64_common`).
+* x86_64 (`x64_common`).
+> Note: JSLK is not fully ported to x86_64 architecture yet, if you want to check out the latest features build for x86 instead.
 * Raspberry Pi 1/2/zero (coming soon) (`bcm28common`).
 
-## Building for x86
+## Building for x86_64
 
 These instructions will help you build JSLK Kernel for the x86 platform.
 
@@ -39,7 +40,7 @@ JSLK can be built on any UNIX like system, such as any Linux distribution, FreeB
 
 On Linux:
 ```
-$ sudo apt-get install nasm wget git  # Change apt-get install for whatever package manager you are using.
+$ sudo apt-get install nasm wget git qemu  # Change apt-get install for whatever package manager you are using.
 $ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
 ```
 
@@ -47,13 +48,15 @@ On macOS:
 ```
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 $ brew install nasm
-& brew install wget
+$ brew install wget
+$ brew install qemu
 $ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_mac_v.1.0.0.zip
 ```
 
 On other operating systems the packages:
 * git
 * nasm
+* qemu
 * i386-elf toolchain (can be built using the scripts [here](https://github.com/sofferjacob/edison-toolchain))
 
 Can be built from source or installed from  other sources.
@@ -64,6 +67,7 @@ To build JSLK from source copy and paste the following commands in a terminal pr
 ```
 $ git clone https://github.com/sofferjacob/jslk.git
 $ cd jslk
+$ export TARGET=x64common  # You can change this for whichever target you want
 $ make
 ```
 > Note: For this to work, your toolchain must be in your path (you can change this in the Makefile).
@@ -82,6 +86,12 @@ On Linux:
 ```
 $ make image
 ```
+
+You can also pass the target as an argument to make instead of defining it as a variable:
+```
+$ make TARGET=x64common clean all floppy run
+```
+
 ## Testing
 
 Although JSLK can be tested on real hardware, it is not recommended, since a bug in the kernel can brick

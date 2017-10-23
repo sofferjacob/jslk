@@ -8,33 +8,27 @@ PREFIX?=/usr/local
 EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 
-export AR=i386-elf-ar
-export AS=i386-elf-as
-export CC=i386-elf-gcc
-export C++=i386-elf-g++
-export GDB=i386-elf-gdb
+include target/$(TARGET)/make.config
 
-CFLAGS=-nostdlib -nostdinc -fno-builtin -I include -I lib/jstdclib/include
-CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include
-LDFLAGS=-Tlink.ld
-ASFLAGS=-felf
-
-CRTI_OBJ:=crt/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)
 CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtend.o)
-CRTN_OBJ:=crt/crtn.o
+
+CFLAGS=-nostdlib -nostdinc -fno-builtin -I include -I lib/jstdclib/include $(TARGET_CFLAGS)
+CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include
+LDFLAGS=-Tlink64.ld
+ASFLAGS=-felf
 
 include lib/jstdclib/make.config
 
-SOURCES= $(CRTI_OBJ) $(CRTBEGIN_OBJ) hal/start.o hal/ports.o hal/modes.o hal/hal.o hal/vga.o kernel/jslk.o \
-hal/descriptor_tables.o hal/interrupt.o hal/isr.o hal/gdt.o hal/pit.o kernel/timer.o hal/pmm.o hal/atomical.o $(JSTDC_SOURCES) \
-crt/lsv.o crt/pvf.o hal/paging.o $(CRTN_OBJ) $(CRTEND_OBJ)
+SOURCES= $(CRTI_OBJ) $(CRTBEGIN_OBJ) $(TARGET_SOURCES) kernel/jslk.o \
+ kernel/timer.o  $(JSTDC_SOURCES) \
+crt/lsv.o crt/pvf.o  $(CRTN_OBJ) $(CRTEND_OBJ)
 
 all: $(SOURCES) link
 
 link:
 	$(CC) -v
-	i386-elf-ld $(LDFLAGS) -o jslk.kernel $(SOURCES)
+	$(LD) $(LDFLAGS) -o jslk.kernel $(SOURCES)
 
 .s.o:
 	nasm $(ASFLAGS) $<
@@ -53,7 +47,7 @@ floppy:
 	echo system.img floppy image has been updated.
 
 clean:
-	rm -rf *.o hal/*.o  hal/*.d kernel/*.o *.kernel lib/*.o crt/*.o crt/*.d
+	rm -rf hal/x86/*.o hal/x86_64/*.d hal/x86_64/*.o kernel/*.o crt/*.o crt/*.d lib/jstdclib/*.o
 	clear
 
 run:
