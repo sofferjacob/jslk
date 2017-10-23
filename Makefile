@@ -15,7 +15,7 @@ CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtend.o)
 
 CFLAGS=-nostdlib -nostdinc -fno-builtin -I include -I lib/jstdclib/include $(TARGET_CFLAGS)
 CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include
-LDFLAGS=-Tlink.ld
+LDFLAGS=-Tlink64.ld
 ASFLAGS=-felf
 
 include lib/jstdclib/make.config
@@ -47,7 +47,7 @@ floppy:
 	echo system.img floppy image has been updated.
 
 clean:
-	rm -rf hal/x86/*.o kernel/*.o crt/*.o crt/*.d lib/jstdclib/*.o
+	rm -rf hal/x86/*.o hal/x86_64/*.d hal/x86_64/*.o kernel/*.o crt/*.o crt/*.d lib/jstdclib/*.o
 	clear
 
 run:
