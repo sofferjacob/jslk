@@ -15,7 +15,7 @@ CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtend.o)
 
 CFLAGS=-nostdlib -nostdinc -fno-builtin -I include -I lib/jstdclib/include $(TARGET_CFLAGS)
 CPPFLAGS=-nostdlib -nostdinc -fno-builtin -I include
-LDFLAGS=-Tlink64.ld
+LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
 include lib/jstdclib/make.config

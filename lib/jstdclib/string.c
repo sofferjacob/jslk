@@ -15,19 +15,7 @@ void *memset(void *str, int c, size_t n) {
     return str;
 }
 
-char *strcat(string dest, const string src) {
-    int i = 0;
-    int start = strlen(dest);
-    int finish = strlen(src);
-    while (i < finish) {
-        dest[start] = src[i];
-        i++;
-        start++;
-    }
-    return dest;
-}
-
-static void itoa(char *buf, int base, int d) {
+void itoa(char *buf, int base, int d) {
     char *p = buf;
     char *p1, *p2;
     unsigned long ud = d;
@@ -65,4 +53,29 @@ static void itoa(char *buf, int base, int d) {
         p1++;
         p2--;
     }
+}
+
+void append(string str, char c) {
+    size_t len = strlen(str);
+    str[len] = c;
+    str[len+1] = '\0';
+}
+
+char* strcat(string dest, const string src) {
+    size_t slen = strlen(src);
+    size_t dlen= strlen(dest);
+    for (size_t i = 0; i < slen; i++) {
+        dest[dlen+i] = src[i];
+    }
+    dlen = strlen(dest);
+    dest[dlen - 1] = '\0';
+    return &dest[0];
+}
+
+int strcmp(string s1, string s2) {
+    int i;
+    for (i = 0; s1[i] == s2[i]; i++) {
+        if (s1[i] == '\0') return 0;
+    }
+    return s1[i] - s2[i];
 }

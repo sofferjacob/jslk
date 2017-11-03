@@ -10,6 +10,19 @@ uint8_t console_color;
 uint16_t *terminal_buffer;
 static uint8_t clear_calls = 0;
 
+
+void backspace() {
+    if (cursorx == 0) {
+        cursory--;
+        cursorx = 80;
+    }
+    cursorx--;
+}
+
+void rightArrow() {
+    cursorx++;
+}
+
 static size_t getIndex(size_t x, size_t y)
 {
     const size_t index = y * 80 + x;

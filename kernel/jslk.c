@@ -3,6 +3,7 @@
 #include <version.h>
 #include <timer.h>
 #include <va_list.h>
+#include <jslk.h>
 #include "multiboot.h"
 
 void testHandler();
@@ -10,21 +11,22 @@ void timerHandler();
 void c1();
 void c2();
 void c3();
+void doubleFault();
+void outOfBounds();
 
-/*
+    /*
 extern unsigned int* end;
 extern unsigned int* _start;
 size_t getSizeOfKernel() {
     return ((size_t)(&_start) + 1) - ((size_t)(&end));
 } */
 
-string memTypes[] = {
-    "0",
-    "Available",
-    "Reserved",
-    "ACPI Reclaim",
-    "ACPI NVS Memory"
-};
+    string memTypes[] = {
+        "0",
+        "Available",
+        "Reserved",
+        "ACPI Reclaim",
+        "ACPI NVS Memory"};
 
 int initRegions(multiboot_info_t* bootinfo) {
     // Check GRUB passed the memmory map
@@ -68,6 +70,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     uint8_t stringColor = getColor(vga_red, vga_green);
     writeStyledString("This is a string with style \n", stringColor);
     kprint("Test concluded, running test for interrupts \n");
+    registerInterruptHandler(5, outOfBounds, NF);
     registerInterruptHandler(3, testHandler, CHAIN_PROTECT, NF);
     genInterrupt(3);
     genInterrupt(4);
@@ -90,7 +93,22 @@ int kernel_main(multiboot_info_t* bootinfo) {
     initRegions(bootinfo);
     cprintf("Cprintf test %i \n", stringColor, KERNEL_VERSION_EXTRA);
     kprint("test concluded \n");
+    keyboard_install();
+    kprintf("Keyboard enabled at %i ticks \n", readSystemTime());
+    registerInterruptHandler(8, doubleFault, NF);
+    char* fs = "Hello ";
+    string ss = "World";
+    char* s = strcat(fs, ss);
+    kprint(fs);
+    delay(3);
+    kprint("Welcome to jsh!\n");
+    kprint("Enter a command \n");
+    kprint("> ");
     // initPaging();
+    // uint32_t *ptr = (uint32_t *)0xDEADBEEF;
+    // *ptr = 21;
+    //kprintf("%i \n", *ptr);
+    //genInterrupt(14);
 }
 
 void c1() {
@@ -106,10 +124,34 @@ void c3()
     kprint("Inside third handler \n");
 }
 
+void doubleFault() {
+    atomicalStart();
+    setMenubarText("ERROR");
+    uint8_t faultColor = getColor(vga_white, vga_red);
+    writeStyledString("Could not enable paging!! \n", faultColor);
+    atomicalRelease();
+    delay(15.0);
+    system_panic("Non recoverable kernel exception (PGN_NE) \n");
+}
+
+void outOfBounds() {
+    system_panic("Trying to execute code outside of RAM or ROM \n");
+}
+
 void testHandler() {
     kprint("Inside Handler \n");
 }
 
 void timerHandler() {
     kprintf("Executing listener() for timer 0. System time: %i \n", readSystemTime());
+}
+
+void jsh(char* userinput) {
+    if (strcmp(userinput, "help") == 0) {
+        kprint("AAA \n");
+    }
+    else {
+        kprint("Command not found \n");
+    }
+    kprint("> ");
 }

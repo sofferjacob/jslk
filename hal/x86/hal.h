@@ -26,6 +26,8 @@ void kernelPrintHex(uint32_t n);
 int kprintf(string c, ...);
 int cprintf(string c, uint8_t color, ...);
 void setMenubarText(string text);
+void backspace();
+void rightArrow();
 
 // Port I/O
 void outb(uint16_t port, uint8_t value);
@@ -55,12 +57,29 @@ void system_panic(string msg);
 #define FREE_PROTECT 3
 #define CHAIN_LOCK 4
 #define NF 5 // No more flags
+#define IRQ0 32
+#define IRQ1 33
+#define IRQ2 34
+#define IRQ3 35
+#define IRQ4 36
+#define IRQ5 37
+#define IRQ6 38
+#define IRQ7 39
+#define IRQ8 40
+#define IRQ9 41
+#define IRQ10 42
+#define IRQ11 43
+#define IRQ12 44
+#define IRQ13 45
+#define IRQ14 46
+#define IRQ15 47
 typedef void (*hiHand_t)();
 int registerInterruptHandler(uint8_t num, hiHand_t handler, ...);
 void addDescription(uint8_t num, string description);
 void genInterrupt(uint8_t num);
 string getintDescription();
 uint8_t findFreeInterrupt();
+int clearChainedInterrupt(uint8_t num);
 
 // System Timer Related functions
 void start_pit(uint32_t freq);
@@ -86,6 +105,10 @@ void initPaging();
 void switchPageDirectory(pageDirectory_t* dir);
 pageEntry_t* getPage(uint32_t addr, bool make, pageDirectory_t* dir);
 
+// Keyboard
+void keyboard_install();
+static char inbuf[1024];
+char* read();
 
 // Other functions
 #define KERNEL_PANIC(X) system_panic(X);

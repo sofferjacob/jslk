@@ -9,6 +9,10 @@
 
 void pageFault();
 
+// In paging.S
+extern void loadPageDirectory(pageDirectory_t *directory);
+extern void enablePaging();
+
 pageDirectory_t* currentDirectory = 0;
 pageDirectory_t* kernelDirectory = 0;
 
@@ -50,20 +54,25 @@ void initPaging() {
   memset(kernelDirectory, 0, sizeof(pageDirectory_t));
   currentDirectory = kernelDirectory;
   // Identity map
-  size_t identityIndex = 0;
+  uint32_t identityIndex = 0;
   while (identityIndex < placementAddr) {
     allocFrame(getPage(identityIndex, 1, kernelDirectory), 0, 0);
-    identityIndex += 0x1000/*VM_PAGE_SIZE*/;
+    identityIndex += 4096/*VM_PAGE_SIZE*/;
   }
   registerInterruptHandler(14, pageFault, CHAIN_PROTECT, NF);
   // Finally enable paging
   switchPageDirectory(kernelDirectory);
+  kprint("Enabled paging! \n");
 }
+
 
 // THE BUG IS HERE!!
 void switchPageDirectory(pageDirectory_t *dir) {
+   kprint("Loading directory \n");
    currentDirectory = dir;
    asm volatile("mov %0, %%cr3":: "r"(&dir->physicalTables));
+   kprint("Loaded \n");
+   delay(2.0);
    uint32_t cr0;
    asm volatile("mov %%cr0, %0": "=r"(cr0));
    cr0 |= 0x80000000; // Enable paging!
@@ -93,6 +102,7 @@ void pageFault() {
   uint32_t faultAddress;
   asm volatile("mov %%cr2, %0" : "=r" (faultAddress));
   kernelPrintHex(faultAddress); kprint("\n");
+  atomicalRelease();
   delay(15.0);
   system_panic("Non recoverable page fault. \n");
 }
