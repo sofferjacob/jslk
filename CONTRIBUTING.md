@@ -5,6 +5,7 @@ Before opening a new issue you should check the following:
 * It affects the latest version of the kernel.
 * The issue has not been reported before.
 * The issue is not already registered as a project.
+
 Once you have checked these points you can proceed to open a new issue. Issues should follow the default issue template when possible. If this is not followed, at least clear description of the issue should be provided. The issue should be tagged properly and if applicable be asigned a milestone and person/team. If you are not sure who to assing, you can mention the person in the description or a separate comment.
 
 ### Sugestions / todos

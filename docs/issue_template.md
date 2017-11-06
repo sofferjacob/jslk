@@ -1,8 +1,8 @@
 ### Expected behavior
-Short description on what was expected to happen.
+Short description of what was expected to happen.
 
 ### Actual behavior
-Self explanatory.
+Self-explanatory.
 
 ### How to reproduce
 How to reproduce the abnormal behavior.
