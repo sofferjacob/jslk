@@ -1,5 +1,5 @@
 #include "hal.h"
-#include "descriptor_tables.h"
+#include "tables/descriptor_tables.h"
 
 extern void startConsole();
 

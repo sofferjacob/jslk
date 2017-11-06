@@ -3,7 +3,7 @@
 *  Desc: Keyboard driver
 *
 *  Notes: No warranty expressed or implied. Use at own risk. */
-#include "hal.h"
+#include "../hal.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <jslk.h>

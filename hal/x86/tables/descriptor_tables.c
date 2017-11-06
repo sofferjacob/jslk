@@ -1,5 +1,5 @@
 #include "descriptor_tables.h"
-#include "hal.h"
+#include "../hal.h"
 #include <string.h>
 #include <stdbool.h>
 

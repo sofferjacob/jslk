@@ -1,6 +1,6 @@
 // Portions of this code are based on James 'M tutorials.
 #include <stdint.h>
-#include "hal.h"
+#include "../hal.h"
 
 void outb(uint16_t port, uint8_t value) {
   asm volatile ("outb %1, %0" :: "dN" (port), "a" (value));

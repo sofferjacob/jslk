@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include "hal.h"
+#include "../hal.h"
 
 typedef struct registers
 {

@@ -1,4 +1,4 @@
-#include "hal.h"
+#include "../hal.h"
 #include <stdint.h>
 #include <string.h>
 #include <va_list.h>
@@ -187,8 +187,9 @@ void startConsole()
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
     clear_console();
-    writeStyledString("JSLK Kernel 0.0.6 - 20171003", statusBarColor);
-    for (size_t i = 0; i < (80 - strlen("JSLK Kernel 0.0.0 - 00000000")); i++)
+    string menubarText = "JSLK Kernel 0.0.6.2pa - 20171106";
+    writeStyledString(menubarText, statusBarColor);
+    for (size_t i = 0; i < (80 - strlen(menubarText)); i++)
     {
         writeStyledString(" ", statusBarColor);
     }

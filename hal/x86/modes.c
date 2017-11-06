@@ -11,7 +11,9 @@ uint8_t _interrupts(mode_t mode) {
 }
 
 void _halt() {
+    _interrupts(off);
     asm volatile ("hlt");
+    _halt(); // In case an interrupt occurs.
 }
 
 void _syscritical(mode_t mode) {

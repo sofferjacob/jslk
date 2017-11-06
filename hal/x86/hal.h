@@ -6,8 +6,7 @@ extern "C" {
 #endif
 
 // Include auxiliary header files
-#include "vga.h"
-#include "paging.h"
+#include "io/vga.h"
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -86,6 +85,7 @@ void start_pit(uint32_t freq);
 size_t readSystemTime();
 #define TICKSTOSEC 100 // 100 ticks = 1 sec at a frequency of 100 Mhz
 
+/*
 // System Physical Memmory Manager (PMM)
 typedef uint32_t physaddr; // So it doesn't go out of scope...
 int pmmMapFirstFree();  // Returns a free frame
@@ -96,14 +96,15 @@ void pmmFreeBlock(void *p);
 void *pmmAllocBlocks(size_t size);
 void *pmmAllocBlock();
 void pmmDeinitRegion(physaddr base, size_t size);
-void pmmInitRegion(physaddr base, size_t size);
+void pmmInitRegion(physaddr base, size_t size);*/
 
+/*
 // System Virtual Memory Manager (Paging)
 int allocFrame(pageEntry_t* page, bool kernelMode, bool rw);
 int freeFrame(pageEntry_t* page);
 void initPaging();
 void switchPageDirectory(pageDirectory_t* dir);
-pageEntry_t* getPage(uint32_t addr, bool make, pageDirectory_t* dir);
+pageEntry_t* getPage(uint32_t addr, bool make, pageDirectory_t* dir); */
 
 // Keyboard
 void keyboard_install();

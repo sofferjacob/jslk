@@ -1,5 +1,5 @@
 #include "pmm.h"
-#include "hal.h"
+#include "../hal.h"
 #include <stdint.h>
 #include <string.h>
 

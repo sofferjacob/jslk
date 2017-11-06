@@ -1,4 +1,4 @@
-#include "hal.h"
+#include "../hal.h"
 #include <string.h>
 
 void debugPrint(string msg) {

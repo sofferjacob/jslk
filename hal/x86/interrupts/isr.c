@@ -1,5 +1,5 @@
 #include "isr.h"
-#include "hal.h"
+#include "../hal.h"
 #include <stdlib.h>
 #include <va_list.h> // for when I add flags to registerInterrupt()
 

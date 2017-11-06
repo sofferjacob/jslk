@@ -1,6 +1,6 @@
-#include "hal.h"
-#include "descriptor_tables.h"
-#include "isr.h"
+#include "../hal.h"
+#include "../tables/descriptor_tables.h"
+#include "../interrupts/isr.h"
 #include <stdint.h>
 
 extern void checkTimers();
