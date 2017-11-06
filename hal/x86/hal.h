@@ -106,6 +106,13 @@ void initPaging();
 void switchPageDirectory(pageDirectory_t* dir);
 pageEntry_t* getPage(uint32_t addr, bool make, pageDirectory_t* dir); */
 
+// Kernel First Stage Memory Manager
+uint32_t kmalloc(uint32_t sz);  // Vainilla
+uint32_t kmalloc_a(uint32_t sz); // Page Aligned Addresses
+uint32_t kmalloc_p(uint32_t sz, uint32_t* phys);  // Returns physical address
+uint32_t kmalloc_ap(uint32_t sz, uint32_t *phys); // Page Aligned, returns physical address
+// kfree() not availabe in this memory maneger!
+
 // Keyboard
 void keyboard_install();
 static char inbuf[1024];
