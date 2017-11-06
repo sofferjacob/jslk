@@ -108,7 +108,7 @@ $ make run
 
 ## Contributing
 
-Check [`CONTRIBUTING.md`](CONTRIBUTING,md) for guidelines on how to contribute to the project, create issues and pull requests. You may also read our [code of conduct](CODE_OF_CONDUCT.md).
+Check [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines on how to contribute to the project, create issues and pull requests. We also encourage you to read our [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Documentation
 
