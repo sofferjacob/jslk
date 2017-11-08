@@ -1,6 +1,6 @@
 ATRIBUTIONS
 ============
 The following people/projects have made this kernel possible:
-* James 'M Tutorials.
-* Broken Thorn Tutorials.
+* James 'M Tutorials: Used to write some parts of the kernel (VM). License: None provided.
+* Broken Thorn Tutorials: Used to get inspiration for some parts of the kernel. License: None provided.
 * OSDev Wiki.
