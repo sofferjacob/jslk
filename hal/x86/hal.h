@@ -7,9 +7,19 @@ extern "C" {
 
 // Include auxiliary header files
 #include "io/vga.h"
+#include "memory/paging.h"
+#include "memory/kheap.h"
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
+
+typedef struct regs
+{
+    uint32_t ds;                                     // Data segment selector
+    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha.
+    uint32_t int_no, err_code;                       // Interrupt number and error code (if applicable)
+    uint32_t eip, cs, eflags, useresp, ss;           // Pushed by the processor automatically.
+} regs_t;
 
 // Screen I/O
 void kputc(char c);
@@ -48,6 +58,7 @@ uint8_t _interrupts(mode_t mode);
 void _halt();
 void _syscritical(mode_t mode);
 void system_panic(string msg);
+void full_system_panic(string msg, string file, uint32_t line);
 
 // System interrupt handler
 #define TOTAL_INTERRUPTS 47
@@ -72,7 +83,7 @@ void system_panic(string msg);
 #define IRQ13 45
 #define IRQ14 46
 #define IRQ15 47
-typedef void (*hiHand_t)();
+typedef void (*hiHand_t)(regs_t);
 int registerInterruptHandler(uint8_t num, hiHand_t handler, ...);
 void addDescription(uint8_t num, string description);
 void genInterrupt(uint8_t num);
@@ -119,7 +130,7 @@ static char inbuf[1024];
 char* read();
 
 // Other functions
-#define KERNEL_PANIC(X) system_panic(X);
+#define PANIC(X) full_system_panic(X, __FILE__, __LINE__);
 
 // Atomical Functions
 /*========== WARNING ===========

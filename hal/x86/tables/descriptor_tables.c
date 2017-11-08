@@ -45,7 +45,7 @@ static void gdt_set_gate(uint32_t num, uint32_t base, uint32_t limit, uint8_t ac
 {
     if (num > (gdtMaxSegments-1) || segmentStatus[num] == true)
     {
-       KERNEL_PANIC("HAL Startup Error: Could not start GDT");
+       PANIC("HAL Startup Error: Could not start GDT");
     }
     gdt_entries[num].baseLow = base & 0xffff;
     gdt_entries[num].baseMiddle = (base >> 16) & 0xff;

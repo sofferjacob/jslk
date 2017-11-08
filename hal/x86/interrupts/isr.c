@@ -43,17 +43,17 @@ static string intDescription[] = {
     "Reserved Interrupt",
 };
 
-void chainedIsrHandler(registers_t regs) {
+void chainedIsrHandler(regs_t regs) {
     if (chainedInterrupts[regs.int_no].totalHandlers == 0) {
-        chainedInterrupts[regs.int_no].handlers[0]();
+        chainedInterrupts[regs.int_no].handlers[0](regs);
         return;
     }
     for (size_t i = 0; i < chainedInterrupts[regs.int_no].totalHandlers + 1; i++) {
-        chainedInterrupts[regs.int_no].handlers[i]();
+        chainedInterrupts[regs.int_no].handlers[i](regs);
     }
 }
 
-void isr_handler(registers_t regs) {
+void isr_handler(regs_t regs) {
     #ifdef KERNEL_DEBUG
     kprint("Received interrupt: "); kernelPrintDec(regs.int_no);
     kprint(" ("); kprint(intDescription[regs.int_no]); kprint(") \n");
@@ -62,7 +62,7 @@ void isr_handler(registers_t regs) {
     if (hiIntHandler[regs.int_no].isChained == true) {
         chainedIsrHandler(regs);
     } else if (hiIntHandler[regs.int_no].hasHandler == true) {
-        hiIntHandler[regs.int_no].handler();
+        hiIntHandler[regs.int_no].handler(regs);
     }
 }
 
@@ -238,7 +238,7 @@ void addDescription(uint8_t num, string description)
     intDescription[num] = description;
 }
 
-void irq_handler(registers_t regs) {
+void irq_handler(regs_t regs) {
     // TODO: Interrupt chaining
     if (regs.int_no >= 40) {
         // Send EOI to slave
@@ -248,7 +248,7 @@ void irq_handler(registers_t regs) {
     outb(0x20, 0x20);
     if (hiIntHandler[regs.int_no].hasHandler == true)
     {
-        hiIntHandler[regs.int_no].handler();
+        hiIntHandler[regs.int_no].handler(regs);
     }
 }
 

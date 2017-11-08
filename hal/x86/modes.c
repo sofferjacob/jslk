@@ -28,11 +28,29 @@ void system_panic(string msg) {
     atomicalStart();
     uint8_t panicColor = getColor(vga_light_grey, vga_blue);
     setConsoleColor(panicColor);
+    setMenubarText("Warning!");
     clear_console();
     kprint("KERNEL PANIC \n");
     kprint("An error ocurred and JSLK had to halt. Restart your device. \n");
     kprint("You may submit a bug report at: https://github.com/sofferjacob/jslk/issues \n");
     kprint("Error message: ");
     kprint(msg);
+    _halt();
+}
+
+void full_system_panic(string msg, string file, uint32_t line) {
+    atomicalStart();
+    uint8_t panicColor = getColor(vga_light_grey, vga_blue);
+    setConsoleColor(panicColor);
+    clear_console();
+    setMenubarText("Warning!");
+    kprint("KERNEL PANIC \n");
+    kprint("An error ocurred and JSLK had to halt. Restart your device. \n");
+    kprint("You may submit a bug report at: https://github.com/sofferjacob/jslk/issues \n");
+    kprint("Error message: ");
+    kprint(msg);
+    #ifdef KERNEL_DEBUG
+    kprintf("File %s, line %i", file, line);
+    #endif
     _halt();
 }

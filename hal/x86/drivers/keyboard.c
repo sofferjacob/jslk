@@ -98,7 +98,7 @@ unsigned char capsus[128] =
 };
 
 /* Handles the keyboard interrupt */
-void keyboard_handler(struct regs *r)
+void keyboard_handler(regs_t regs)
 {
     /* Read from the keyboard's data buffer */
     scancode = inb(0x60);

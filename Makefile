@@ -47,7 +47,8 @@ floppy:
 	echo system.img floppy image has been updated.
 
 clean:
-	rm -rf hal/x86/*.o hal/x86_64/*.d hal/x86_64/*.o kernel/*.o crt/*.o crt/*.d lib/jstdclib/*.o
+	rm -rf hal/x86/*.o hal/x86_64/*.d hal/x86_64/*.o kernel/*.o crt/*.o crt/*.d lib/jstdclib/*.o \
+	hal/x86/drivers/*.o hal/x86/memory/*.o hal/x86/io/*.o hal/x86/interrupts/*.o hal/x86/tables/*.o
 	clear
 
 run:

@@ -99,10 +99,16 @@ int kernel_main(multiboot_info_t* bootinfo) {
     string ss = "World";
     char* s = strcat(fs, ss);
     kprint(fs);
-    delay(3);
+    kprint("Enabling paging \n");
+    delay(2);
+    initialise_paging();
+    kprint("Paging enabled \n");
+    uint32_t *ptr = (uint32_t*)0xBADBEEF;
+    uint32_t do_page_fault = *ptr;
+    /*
     kprint("Welcome to jsh!\n");
     kprint("Enter a command \n");
-    kprint("> ");
+    kprint("> ");*/
     // initPaging();
     // uint32_t *ptr = (uint32_t *)0xDEADBEEF;
     // *ptr = 21;
