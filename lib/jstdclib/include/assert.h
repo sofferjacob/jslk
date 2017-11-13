@@ -1,6 +1,6 @@
 #ifndef _jlklib_aseert_h
 #define _jlklib_aseert_h
 
-void assert(int expression);
+#define assert(b) ((b) ? (void)0 : PANIC("Assertion failed"))
 
 #endif
