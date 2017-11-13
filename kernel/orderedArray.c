@@ -33,5 +33,34 @@ void destroyOrderedArray(orderedArray_t* array) {
 
 void insertOrderedArray(orderedArray_t* array, type_t element) {
     assert(array->lessThan);
-    
+    uint32_t iterator = 0;
+    while (iterator < array->size && array->lessThan(array->array[iterator], item)) {
+        iterator++;
+    }
+    if (iterator == array->size) {
+        array->size++;
+    } else {
+        type_t tmp = array->array[iterator];
+        array->array[iterator] = item;
+        while (iterator < array->size) {
+           iterator++;
+           type_t tmp2 = array->array[iterator];
+           array->array[iterator] = tmp;
+           tmp = tmp2;
+        }
+        array->size++;
+    }
+}
+
+type_t lookupOrderedArray(uint32_t index, orderedArray_t* array) {
+    assert(index < array->size);
+    return array->array[index];
+}
+
+void removeOrderedArray(uint32_t index, orderedArray_t *array) {
+       while (i < array->size) {
+               array->array[i] = array->array[i + 1];
+               i++;      
+      }
+      array->size--;
 }
