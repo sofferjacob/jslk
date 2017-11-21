@@ -90,7 +90,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     size_t memsize = ((bootinfo->mem_lower + bootinfo->mem_upper)*1024);
     kprint("Detected "); kernelPrintDec(memsize / 1024); kprint(" kb of physical memory \n");
     initRegions(bootinfo);
-    cprintf("Cprintf test %i \n", stringColor, KERNEL_VERSION_EXTRA);
+    cprintf("Cprintf test %i.%i.%i \n", stringColor, KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE);
     kprint("test concluded \n");
     keyboard_install();
     kprintf("Keyboard enabled at %i ticks \n", readSystemTime());

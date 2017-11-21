@@ -187,7 +187,7 @@ void startConsole()
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
     clear_console();
-    string menubarText = "JSLK Kernel 0.0.6.2pa - 20171106";
+    string menubarText = "JSLK Kernel 0.0.7pa - 20171106";
     writeStyledString(menubarText, statusBarColor);
     for (size_t i = 0; i < (80 - strlen(menubarText)); i++)
     {

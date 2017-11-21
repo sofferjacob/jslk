@@ -20,7 +20,7 @@ orderedArray_t createOrderedArray(uint32_t maxSize, lessThanPredicate_t lessThan
 orderedArray_t placeOrderedArray(void* address, uint32_t maxSize, lessThanPredicate_t lessThan);
 void destroyOrderedArray(orderedArray_t* array);
 void insertOrderedArray(orderedArray_t* array, type_t element);
-void lookupOrderedArray(uint32_t index, orderedArray_t* array);
+type_t lookupOrderedArray(uint32_t index, orderedArray_t* array);
 void removeOrderedArray(uint32_t index, orderedArray_t* array);
 
 #endif

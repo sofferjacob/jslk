@@ -96,6 +96,10 @@ void start_pit(uint32_t freq);
 size_t readSystemTime();
 #define TICKSTOSEC 100 // 100 ticks = 1 sec at a frequency of 100 Mhz
 
+// Used in the kernel keap
+#define KHEAP_START 0xC0000000
+#define KHEAP_INITIAL_SIZE 0x100000
+
 /*
 // System Physical Memmory Manager (PMM)
 typedef uint32_t physaddr; // So it doesn't go out of scope...
