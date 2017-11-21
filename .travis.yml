@@ -14,4 +14,6 @@ script:
 - git clone https://github.com/sofferjacob/jslk.git
 - cd jslk
 - echo $PATH
+- i386-elf-gcc --version
+- export TARGET=x86common
 - make
