@@ -5,12 +5,13 @@ sudo: required
 before_install:
 - sudo apt-get install nasm
 install:
+- cd $HOME
 - wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
 - tar -xvf sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
-- sudo mv opt/cross/bin/* /bin
-- export PATH=$PATH:opt/cross/bin
+- export PATH=$PATH:$HOME/opt/cross/bin
 script:
+- cd $HOME
 - git clone https://github.com/sofferjacob/jslk.git
 - cd jslk
 - echo $PATH
-- make travis
+- make
