@@ -108,9 +108,79 @@ void* alloc(uint32_t size, bool pageAlign, heap_t* heap) {
     uint32_t newSize = size + sizeof(header_t) + sizeof(footer_t);
     int32_t iterator = findSmallestHole(newSize, pageAlign, heap);
     if (iterator == -1) {
-        //
+        uint32_t oldSize = heap->endAddress - heap->startAddress;
+        uint32_t oldEndAddress = heap->endAddress;
+        expand(oldSize + newSize, heap);
+        uint32_t newLength = heap->endAddress-heap->startAddress;
+        iterator = 0;
+        uint32_t idx = -1;
+        uint32_t value = 0x0;
+        while (iterator > heap->index.size) {
+            uint32_t tmp = (uint32_t)lookupOrderedArray(iterator, &heap->index);
+            if (tmp > value) {
+                value = tmp;
+                idx = iterator;
+            }
+            iterator++;
+        }
+        if (idx == -1) {
+            // We didn't find any headers, add one
+            header_t* header = (header_t*)oldEndAddress;
+            header->magic = HEAP_MAGIC;
+            header->isHole = true;
+            header->size = newLength - oldSize;
+            footer_t* footer = (footer_t*)(oldEndAddress + header->size - sizeof(footer_t));
+            footer->magic = HEAP_MAGIC;
+            footer->header = header;
+            insertOrderedArray(&heap->index, (void*)header);
+        } else {
+            header_t* header = lookupOrderedArray(idx, &heap->index);
+            header->size = newLength - oldSize;
+            footer_t* footer = (footer_t*)((uint32_t)header + header->size - sizeof(footer_t));
+            footer->header = header;
+            footer->magic = HEAP_MAGIC;
+        }
+        return alloc(size, pageAlign, heap);
     }
     header_t *origHoleHeader = (header_t *)lookupOrderedArray(iterator, &heap->index);
     uint32_t origHolePos = (uint32_t)origHolePos;
     uint32_t origHoleSize = origHoleHeader->size;
+    if (origHolesSize-newSize < sizeof(header_t)+sizeof(footer_t)) {
+        size += origHoleSize-newSize;
+        newSize = origHoleSize;
+    }
+    if (pageAlign && origHolePos&0xFFFFF000) {
+        uint32_t newLocation = origHolePos + 0x1000 - (origHolePos&0xFFF) - sizeof(header_t);
+        header_t* holeHeader = (header_t*)origHolePos;
+        holeHeader->size = 0x1000 - (origHolePos&0xFFF) - sizeof(header_t);
+        holeHeader->magic = HEAP_MAGIC;
+        holeHeader->isHole = true;
+        footer_t* holeFooter = (footer_t*) ((uint32_t)newLocation-sizeof(footer_t));
+        holeFooter->magic = HEAP_MAGIC;
+        holeFooter->header = holeHeader;
+        origHolePos = newLocation;
+        origHoleSize = origHoleSize-holeHeader->size;
+    } else {
+        removeOrderedArray(iterator, &heap->index);
+    }
+    header_t* blockHeader = (header_t*)origHolePos;
+    blockHeader->magic = HEAP_MAGIC;
+    blockHeader->isHole = false;
+    blockHeader->size = newSize;
+    footer_t* blockFooter = (footer_t*)(origHolePos+sizeof(header_t)+size);
+    blockFooter->magic = HEAP_MAGIC;
+    blockFooter->header = blockHeader;
+    if (origHoleSize - newSize > 0) {
+        header_t* holeHeader = (header_t*)(origHolePos + sizeof(header_t) + sizeof(fotter_t));
+        holeHeader->magic = HEAP_MAGIC;
+        holeHeader->isHole = true;
+        holeHeader->size = origHoleSize - newSize;
+        footer_t* holeFooter = (footer_t*)((uint32_t)holeHeader + origHoleSize - newSize - sizeof(footer_t));
+        if ((uint32_t)holeFooter < heap->endAddress) {
+            holeFooter->magic = HEAP_MAGIC;
+            holeFooter->header = holeHeader;
+        }
+        insertOrderedArray(&heap->index, (void*)holeHeader);
+    } 
+    return (void*) ((uint32_t)blockHeader+sizeof(header_t));
 }

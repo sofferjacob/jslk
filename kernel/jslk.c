@@ -101,10 +101,13 @@ int kernel_main(multiboot_info_t* bootinfo) {
     kprint(fs);
     kprint("Enabling paging \n");
     delay(2);
+    uint32_t bp = kmalloc(sizeof(int));
+    uint32_t bp2 = kmalloc(sizeof(int));
+    kprintf("BP: %h \n, BP2: %h \n", bp, bp2);
     initialise_paging();
     kprint("Paging enabled \n");
-    uint32_t *ptr = (uint32_t*)0xBADBEEF;
-    uint32_t do_page_fault = *ptr;
+    uint32_t ap = kmalloc(sizeof(int));
+    kprintf("AP: %h \n", ap);
     /*
     kprint("Welcome to jsh!\n");
     kprint("Enter a command \n");
