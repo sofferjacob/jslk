@@ -134,7 +134,7 @@ static char inbuf[1024];
 char* read();
 
 // Other functions
-#define PANIC(X) full_system_panic(X, __FILE__, __LINE__);
+#define PANIC(X) full_system_panic(X, __FILE__, __LINE__)
 
 // Atomical Functions
 /*========== WARNING ===========

@@ -5,6 +5,9 @@
 #include <orderedArray.h>
 #include <hal.h>
 
+heap_t* kheap = 0;
+extern page_directory_t* kernel_directory;
+
 static int32_t findSmallestHole(uint32_t size, bool pageAlign, heap_t* heap) {
     size_t iterator = 0;
     while (iterator < heap->index.size) {
@@ -31,7 +34,7 @@ static int32_t findSmallestHole(uint32_t size, bool pageAlign, heap_t* heap) {
     }
 }
 
-static int8_t heatherLessThan(void* a, void* b) {
+static int8_t headerLessThan(void* a, void* b) {
     return (((header_t*)a)->size < ((header_t*)b)->size)?1:0;
 }
 
@@ -145,7 +148,7 @@ void* alloc(uint32_t size, bool pageAlign, heap_t* heap) {
     header_t *origHoleHeader = (header_t *)lookupOrderedArray(iterator, &heap->index);
     uint32_t origHolePos = (uint32_t)origHolePos;
     uint32_t origHoleSize = origHoleHeader->size;
-    if (origHolesSize-newSize < sizeof(header_t)+sizeof(footer_t)) {
+    if (origHoleSize-newSize < sizeof(header_t)+sizeof(footer_t)) {
         size += origHoleSize-newSize;
         newSize = origHoleSize;
     }
@@ -171,7 +174,7 @@ void* alloc(uint32_t size, bool pageAlign, heap_t* heap) {
     blockFooter->magic = HEAP_MAGIC;
     blockFooter->header = blockHeader;
     if (origHoleSize - newSize > 0) {
-        header_t* holeHeader = (header_t*)(origHolePos + sizeof(header_t) + sizeof(fotter_t));
+        header_t* holeHeader = (header_t*)(origHolePos + sizeof(header_t) + sizeof(footer_t));
         holeHeader->magic = HEAP_MAGIC;
         holeHeader->isHole = true;
         holeHeader->size = origHoleSize - newSize;
@@ -184,3 +187,58 @@ void* alloc(uint32_t size, bool pageAlign, heap_t* heap) {
     } 
     return (void*) ((uint32_t)blockHeader+sizeof(header_t));
 }
+
+void free(void* p, heap_t* heap) {
+    if (p == 0) {
+        return;  // Null pointer
+    }
+    header_t* header = (header_t*) ((uint32_t)p-sizeof(header_t));
+    footer_t* footer = (footer_t*) ((uint32_t)header+header->size-sizeof(footer_t));
+    assert(header->magic == HEAP_MAGIC);
+    assert(footer->magic == HEAP_MAGIC);
+    header->isHole = true;
+    bool doAdd = true;
+    // Unify left
+    footer_t* footerTest = (footer_t*) ((uint32_t)header - sizeof(header_t/*footer_t change if code doesnt work*/));
+    if (footerTest->header->isHole == true && footerTest->magic == HEAP_MAGIC) {
+        uint32_t cacheSize = header->size;
+        header = footerTest->header;
+        footer->header = header;
+        header->size += cacheSize;
+        doAdd = false;
+    }
+    header_t* headerTest = (header_t*)(footer+sizeof(footer_t));
+    if (headerTest->isHole == true && headerTest->magic == HEAP_MAGIC) {
+        header->size += headerTest->size;
+        footerTest = (footer_t*)((uint32_t)headerTest+headerTest->size-sizeof(footer_t));
+        footer = footerTest;
+        uint32_t iterator = 0;
+        while ((iterator < heap->index.size) && (lookupOrderedArray(iterator, &heap->index) != (void*)headerTest)) {
+            iterator++;
+        }
+        assert(iterator < heap->index.size);
+        removeOrderedArray(iterator, &heap->index);
+    }
+    if ((uint32_t)footer + sizeof(footer_t) == heap->endAddress) {
+        uint32_t oldLen = heap->endAddress - heap->startAddress;
+        uint32_t newLength = contract((uint32_t)header - heap->startAddress, heap);
+        if (header->size - (oldLen-newLength) > 0) {
+            header->size -= oldLen-newLength;
+            footer = (footer_t*)((uint32_t)header + header->size - sizeof(footer_t));
+            footer->magic = HEAP_MAGIC;
+            footer->header = header;
+        } else {
+            uint32_t iterator = 0;
+            while ((iterator < heap->index.size) && (lookupOrderedArray(iterator, &heap->index) != (void *)headerTest)) {
+                iterator++;
+            }
+            if (iterator < heap->index.size) {
+                removeOrderedArray(iterator, &heap->index);
+            }
+        }
+    }
+    if (doAdd == true) {
+        insertOrderedArray(&heap->index, (void*)header);
+    }
+}
+

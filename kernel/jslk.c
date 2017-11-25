@@ -107,7 +107,9 @@ int kernel_main(multiboot_info_t* bootinfo) {
     initialise_paging();
     kprint("Paging enabled \n");
     uint32_t ap = kmalloc(sizeof(int));
+    uint32_t aph = kmalloc(sizeof(int));
     kprintf("AP: %h \n", ap);
+    kprintf("APH: %h \n", aph);
     /*
     kprint("Welcome to jsh!\n");
     kprint("Enter a command \n");

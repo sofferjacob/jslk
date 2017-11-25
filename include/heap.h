@@ -24,11 +24,12 @@ typedef struct heap {
     orderedArray_t index;
     uint32_t startAddress;
     uint32_t endAddress;
+    uint32_t maxSize;
     bool supervisor;
     bool readonly;
 } heap_t;
 
-heap_t* createHeap(uint32_t start, uint32_t end, bool supervisor, bool readonly);
+heap_t* createHeap(uint32_t start, uint32_t end, uint32_t max, bool supervisor, bool readonly);
 void* alloc(uint32_t size, bool pageAlign, heap_t* heap);
 void free(void* p, heap_t* heap);
 
