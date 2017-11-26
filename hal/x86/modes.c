@@ -51,7 +51,7 @@ void full_system_panic(string msg, string file, uint32_t line) {
     kprint("An error ocurred and JSLK had to halt. Restart your device. \n");
     kprint("You may submit a bug report at: https://github.com/sofferjacob/jslk/issues \n");
     kprint("Error message: ");
-    kprint(msg);
+    kprintf("%s \n", msg);
     #ifdef KERNEL_DEBUG
     kprintf("File %s, line %i", file, line);
     #endif

@@ -4,8 +4,10 @@
 #include <timer.h>
 #include <va_list.h>
 #include <jslk.h>
+#include <heap.h>
 #include "multiboot.h"
 
+extern heap_t *kheap;
 void testHandler();
 void timerHandler();
 void c1();
@@ -106,10 +108,14 @@ int kernel_main(multiboot_info_t* bootinfo) {
     kprintf("BP: %h \n, BP2: %h \n", bp, bp2);
     initialise_paging();
     kprint("Paging enabled \n");
-    uint32_t ap = kmalloc(sizeof(int));
-    uint32_t aph = kmalloc(sizeof(int));
+    uint32_t ap = kmalloc(8);
+    uint32_t aph = kmalloc(8);
     kprintf("AP: %h \n", ap);
     kprintf("APH: %h \n", aph);
+    kfree(ap);
+    kfree(aph);
+    uint32_t aphd = kmalloc(8);
+    kprintf("APHD: %h \n", aphd);
     /*
     kprint("Welcome to jsh!\n");
     kprint("Enter a command \n");
