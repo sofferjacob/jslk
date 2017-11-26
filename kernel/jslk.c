@@ -44,8 +44,8 @@ int initRegions(multiboot_info_t* bootinfo) {
         kprint("Found section ");kernelPrintDec(regNum);kprint(" of type ");kprint(memTypes[mmap->type]);kprint(". \n");
         kprint("Section base: ");kernelPrintHex(mmap->base_addr_low); kprint("\n");
         if (mmap->type == 1) {
-          // pmmInitRegion((physaddr)mmap->base_addr_low, (size_t)mmap->size);
-          // kprintf("Initialized region %i\n", regNum);
+          //init_region((uint32_t)mmap->base_addr_low, (uint32_t)mmap->size);
+          kprintf("Initialized region %i\n", regNum);
         }
         mmap = (memory_map_t*)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
         regNum++;
@@ -89,8 +89,10 @@ int kernel_main(multiboot_info_t* bootinfo) {
     kprint("Test concluded, running test for a 2 second delay \n");
     delay(2);
     kprint("Test concluded\n");
-    size_t memsize = ((bootinfo->mem_lower + bootinfo->mem_upper)*1024);
+    uint32_t memsize = ((bootinfo->mem_lower + bootinfo->mem_upper)*1024);
     kprint("Detected "); kernelPrintDec(memsize / 1024); kprint(" kb of physical memory \n");
+    start_pmm(memsize);
+    kprint("Initialized PMM");
     initRegions(bootinfo);
     cprintf("Cprintf test %i.%i.%i \n", stringColor, KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE);
     kprint("test concluded \n");

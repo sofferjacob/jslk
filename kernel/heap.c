@@ -78,7 +78,7 @@ static int32_t find_smallest_hole(uint32_t size, uint8_t page_align, heap_t *hea
             // Page-align the starting point of this header.
             uint32_t location = (uint32_t)header;
             int32_t offset = 0;
-            if ((location+sizeof(header_t)) & 0xFFFFF000 != 0)
+            if ((location+sizeof(header_t) & 0xFFFFF000) != 0)
                 offset = 0x1000 /* page size */  - (location+sizeof(header_t))%0x1000;
             int32_t hole_size = (int32_t)header->size - offset;
             // Can we fit now?

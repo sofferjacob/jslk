@@ -21,8 +21,10 @@ page_directory_t *kernel_directory=0;
 page_directory_t *current_directory=0;
 
 // A bitset of frames - used or free.
-uint32_t *frames;
-uint32_t nframes;
+static uint32_t *frames;
+static uint32_t nframes;
+static uint32_t mem_end_page = 0;
+static uint32_t used_frames;
 
 // Defined in kheap.c
 extern uint32_t placement_address;
@@ -80,8 +82,11 @@ static uint32_t first_frame()
 }
 
 // Function to allocate a frame.
-void alloc_frame(page_t *page, int is_kernel, int is_writeable)
+int alloc_frame(page_t *page, int is_kernel, int is_writeable)
 {
+    if (used_frames == nframes) {
+        return 1;  // We don't have enough memory, return.
+    }
     if (page->frame != 0)
     {
         return;
@@ -116,16 +121,50 @@ void free_frame(page_t *page)
     }
 }
 
+void start_pmm(uint32_t mem_size) {
+    mem_end_page = mem_size;
+    nframes = mem_size/0x1000;  // 4096 (the size of a frame)
+    used_frames = nframes;      // We don't know which parts of memory are usable.
+    frames = (uint32_t*)kmalloc(INDEX_FROM_BIT(nframes));
+    memset(frames, 1, INDEX_FROM_BIT(nframes));
+}
+
+// Initialize a region in the PMM
+void init_region(uint32_t base, uint32_t size) {
+    uint32_t align = base / 0x1000;
+    uint32_t blocks = size / 0x1000;
+    for (; blocks > 0; blocks--) {
+        clear_frame(align++);
+        used_frames--;
+    }
+    set_frame(0);
+} 
+
+// Deinitialize a region in the PMM
+void deinit_region(uint32_t base, uint32_t size) {
+    uint32_t align = base / 0x1000;
+    uint32_t blocks = size / 0x1000;
+    for (; blocks > 0; blocks--) {
+        set_frame(align++);
+        used_frames++;
+    }
+}
+
 void initialise_paging()
 {
-    // The size of physical memory. For the moment we
-    // assume it is 16MB big.
-    uint32_t mem_end_page = 0x1000000;
-
-    nframes = mem_end_page / 0x1000;
-    frames = (uint32_t *)kmalloc(INDEX_FROM_BIT(nframes));
-    memset(frames, 0, INDEX_FROM_BIT(nframes));
-
+    if (mem_end_page <= 0) {
+        /*
+        The PMM didn't start, assume we have
+        16 MB of RAM
+        */
+        uint32_t mem_end_page = 0x1000000;
+        nframes = mem_end_page / 0x1000;
+        frames = (uint32_t *)kmalloc(INDEX_FROM_BIT(nframes));
+        memset(frames, 0, INDEX_FROM_BIT(nframes));
+    } else if (used_frames == nframes) {
+        PANIC("Couldn't enable paging: not enough memory");
+        return;  // Not enough memory
+    }
     // Let's make a page directory.
     kernel_directory = (page_directory_t *)kmalloc_a(sizeof(page_directory_t));
     memset(kernel_directory, 0, sizeof(page_directory_t));

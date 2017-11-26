@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <va_list.h>
+#include <version.h>
 
 // Necessary variables
 size_t cursorx;
@@ -187,9 +188,9 @@ void startConsole()
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
     clear_console();
-    string menubarText = "JSLK Kernel 0.0.7pa - 20171106";
-    writeStyledString(menubarText, statusBarColor);
-    for (size_t i = 0; i < (80 - strlen(menubarText)); i++)
+    string menubarText = "JSLK Kernel 0.0.7-pre-alpha/debug";
+    cprintf("JSLK Kernel %i.%i.%i-%s", statusBarColor, KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE, KERNEL_RELEASE_TYPE);
+    for (size_t i = 0; i < (80 - strlen(menubarText) - 2); i++)
     {
         writeStyledString(" ", statusBarColor);
     }
