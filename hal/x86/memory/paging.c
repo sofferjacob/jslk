@@ -21,13 +21,17 @@ page_directory_t *kernel_directory=0;
 page_directory_t *current_directory=0;
 
 // A bitset of frames - used or free.
-static uint32_t *frames;
-static uint32_t nframes;
-static uint32_t mem_end_page = 0;
-static uint32_t used_frames;
+/*static*/ uint32_t *frames;
+/*static*/ uint32_t nframes;
+/*static*/ uint32_t mem_end_page = 0;
+/*static*/ uint32_t used_frames;
 
 // Defined in kheap.c
 extern uint32_t placement_address;
+
+uint32_t getTotalFrames() {
+    return nframes;
+}
 
 // Macros used in the bitset algorithms.
 #define INDEX_FROM_BIT(a) (a/(8*4))
@@ -124,9 +128,9 @@ void free_frame(page_t *page)
 void start_pmm(uint32_t mem_size) {
     mem_end_page = mem_size;
     nframes = mem_size/0x1000;  // 4096 (the size of a frame)
-    used_frames = nframes;      // We don't know which parts of memory are usable.
+    used_frames = 1;            // We don't know which parts of memory are usable.
     frames = (uint32_t*)kmalloc(INDEX_FROM_BIT(nframes));
-    memset(frames, 1, INDEX_FROM_BIT(nframes));
+    memset(frames, 0, INDEX_FROM_BIT(nframes));
 }
 
 // Initialize a region in the PMM
@@ -147,11 +151,13 @@ void deinit_region(uint32_t base, uint32_t size) {
     for (; blocks > 0; blocks--) {
         set_frame(align++);
         used_frames++;
+        nframes--;
     }
 }
 
-void initialise_paging()
-{
+void initialise_paging() {
+    kprintf("**TEST: Random Used frame status: %i **\n", test_frame(0x9fc00+0x1000));
+    delay(3.0);
     if (mem_end_page <= 0) {
         /*
         The PMM didn't start, assume we have

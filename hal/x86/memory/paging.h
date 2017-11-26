@@ -65,5 +65,6 @@ page_t *get_page(uint32_t address, int make, page_directory_t *dir);
 void start_pmm(uint32_t mem_size);
 void init_region(uint32_t base, uint32_t size);
 void deinit_region(uint32_t base, uint32_t size);
+uint32_t getTotalFrames();
 
 #endif

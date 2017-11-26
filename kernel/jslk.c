@@ -43,9 +43,9 @@ int initRegions(multiboot_info_t* bootinfo) {
         }
         kprint("Found section ");kernelPrintDec(regNum);kprint(" of type ");kprint(memTypes[mmap->type]);kprint(". \n");
         kprint("Section base: ");kernelPrintHex(mmap->base_addr_low); kprint("\n");
-        if (mmap->type == 1) {
-          //init_region((uint32_t)mmap->base_addr_low, (uint32_t)mmap->size);
-          kprintf("Initialized region %i\n", regNum);
+        if (mmap->type != 1) {
+          deinit_region(mmap->base_addr_low, mmap->size);
+          kprintf("Deinitialized region %i\n", regNum);
         }
         mmap = (memory_map_t*)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
         regNum++;
@@ -106,7 +106,8 @@ int kernel_main(multiboot_info_t* bootinfo) {
     uint32_t bp2 = kmalloc(sizeof(int));
     kprintf("BP: %h \n, BP2: %h \n", bp, bp2);
     initialise_paging();
-    kprint("Paging enabled \n");
+    uint32_t totalFrames = getTotalFrames();
+    kprintf("Paging enabled, total frames: %i \n", totalFrames);
     uint32_t ap = kmalloc(8);
     uint32_t aph = kmalloc(8);
     kprintf("AP: %h \n", ap);
