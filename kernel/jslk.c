@@ -97,10 +97,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     keyboard_install();
     kprintf("Keyboard enabled at %i ticks \n", readSystemTime());
     registerInterruptHandler(8, doubleFault, NF);
-    char* fs = "Hello ";
-    string ss = "World";
-    char* s = strcat(fs, ss);
-    kprint(fs);
+    kprint("Beggining memory test \n");
     kprint("Enabling paging \n");
     delay(2);
     uint32_t bp = kmalloc(sizeof(int));
@@ -116,6 +113,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     kfree(aph);
     uint32_t aphd = kmalloc(8);
     kprintf("APHD: %h \n", aphd);
+    kprint("Finished testing memory \n");
     /*
     kprint("Welcome to jsh!\n");
     kprint("Enter a command \n");
