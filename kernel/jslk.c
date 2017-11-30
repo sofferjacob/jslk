@@ -22,7 +22,7 @@ extern unsigned int* _start;
 size_t getSizeOfKernel() {
     return ((size_t)(&_start) + 1) - ((size_t)(&end));
 } */
-
+/*
     string memTypes[] = {
         "0",
         "Available",
@@ -50,7 +50,7 @@ int initRegions(multiboot_info_t* bootinfo) {
         mmap = (memory_map_t*)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
         regNum++;
     }
-}
+}*/
 
 int kernel_main(multiboot_info_t* bootinfo) {
     _interrupts(off);
@@ -91,9 +91,9 @@ int kernel_main(multiboot_info_t* bootinfo) {
     kprint("Test concluded\n");
     uint32_t memsize = ((bootinfo->mem_lower + bootinfo->mem_upper)*1024);
     kprint("Detected "); kernelPrintDec(memsize / 1024); kprint(" kb of physical memory \n");
-    start_pmm(memsize);
-    kprint("Initialized PMM");
-    initRegions(bootinfo);
+    start_pmm(bootinfo);
+    //kprint("Initialized PMM");
+    //initRegions(bootinfo);
     cprintf("Cprintf test %i.%i.%i \n", stringColor, KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE);
     kprint("test concluded \n");
     keyboard_install();

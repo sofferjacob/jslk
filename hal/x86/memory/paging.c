@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <timer.h>
 #include <heap.h>
+#include <string.h>
 
 extern heap_t* kheap;
 
@@ -36,7 +37,7 @@ uint32_t getTotalFrames() {
 // Macros used in the bitset algorithms.
 #define INDEX_FROM_BIT(a) (a/(8*4))
 #define OFFSET_FROM_BIT(a) (a%(8*4))
-
+/*
 // Static function to set a bit in the frames bitset
 static void set_frame(uint32_t frame_addr)
 {
@@ -44,6 +45,13 @@ static void set_frame(uint32_t frame_addr)
     uint32_t idx = INDEX_FROM_BIT(frame);
     uint32_t off = OFFSET_FROM_BIT(frame);
     frames[idx] |= (0x1 << off);
+} */
+
+void set_frame(uint32_t frame_addr) {
+		uint32_t frame  = frame_addr / 0x1000;
+		uint32_t index  = INDEX_FROM_BIT(frame);
+		uint32_t offset = OFFSET_FROM_BIT(frame);
+		frames[index] |= ((uint32_t)0x1 << offset);
 }
 
 // Static function to clear a bit in the frames bitset
@@ -93,7 +101,7 @@ int alloc_frame(page_t *page, int is_kernel, int is_writeable)
     }
     if (page->frame != 0)
     {
-        return;
+        return 0;
     }
     else
     {
@@ -125,38 +133,86 @@ void free_frame(page_t *page)
     }
 }
 
-void start_pmm(uint32_t mem_size) {
-    mem_end_page = mem_size;
-    nframes = mem_size/0x1000;  // 4096 (the size of a frame)
-    used_frames = 1;            // We don't know which parts of memory are usable.
-    frames = (uint32_t*)kmalloc(INDEX_FROM_BIT(nframes));
-    memset(frames, 0, INDEX_FROM_BIT(nframes));
-}
-
+/*
 // Initialize a region in the PMM
-void init_region(uint32_t base, uint32_t size) {
+void init_region(uint32_t base, size_t size) {
     uint32_t align = base / 0x1000;
     uint32_t blocks = size / 0x1000;
     for (; blocks > 0; blocks--) {
-        clear_frame(align++);
+        clear_frame(INDEX_FROM_BIT(align++));
         used_frames--;
     }
     set_frame(0);
 } 
 
 // Deinitialize a region in the PMM
-void deinit_region(uint32_t base, uint32_t size) {
+void deinit_region(uint32_t base, size_t size) {
     uint32_t align = base / 0x1000;
     uint32_t blocks = size / 0x1000;
     for (; blocks > 0; blocks--) {
-        set_frame(align++);
+        set_frame(OFFSET_FROM_BIT(align++));
         used_frames++;
         nframes--;
     }
+}*/
+
+void deinit_region(uint32_t addr, uint32_t size) {
+    uint32_t address = addr/0x1000;
+    uint32_t finalsize = addr + size;
+    while (address < size) {
+        set_frame(address);
+        nframes--;
+        address += 0x1000;
+    }
 }
 
+string memTypes[] = {
+    "0",
+    "Available",
+    "Reserved",
+    "ACPI Reclaim",
+    "ACPI NVS Memory"};
+
+int initRegions(multiboot_info_t* bootinfo) {
+    // Check GRUB passed the memmory map
+    if (!(bootinfo->flags & MULTIBOOT_INFO_MEM_MAP)) {
+        PANIC("Couldn't load memory map");
+    }
+    memory_map_t* mmap = bootinfo->mmap_addr;
+    uint8_t regNum = 0;
+    while (mmap < bootinfo->mmap_addr + bootinfo->mmap_length) {
+        if (mmap->type > 4) {
+          mmap->type = 2;
+        }
+        kprint("Found section ");kernelPrintDec(regNum);kprint(" of type ");kprint(memTypes[mmap->type]);kprint(". \n");
+        kprint("Section base: ");kernelPrintHex(mmap->base_addr_low); kprint("\n");
+        if (mmap->type == 2) {
+          for (uint64_t i = 0; i < mmap->length_low; i += 0x1000) {
+              if (mmap->base_addr_low + i > 0xFFFFFFFF) break;
+              set_frame((mmap->base_addr_low + i) /*& 0xFFFFF000*/);
+          }
+          kprintf("Deinitialized region %i\n", regNum);
+        }
+        mmap = (memory_map_t*)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
+        regNum++;
+    }
+}
+
+void start_pmm(multiboot_info_t* bootinfo) {
+    uint32_t mem_size = ((bootinfo->mem_lower + bootinfo->mem_upper)/**/);
+    kprintf("Started PMM with %i kb of physical memory \n", mem_size/1024);
+    mem_end_page = mem_size;
+    nframes = mem_size/0x1000;  // 4096 (the size of a frame)
+    used_frames = 1;            // We don't know which parts of memory are usable.
+    frames = (uint32_t*)kmalloc(INDEX_FROM_BIT(nframes));
+    memset(frames, 0, INDEX_FROM_BIT(nframes));
+    initRegions(bootinfo);
+    kprintf("Available frames: %i \n", nframes);
+}
+
+
 void initialise_paging() {
-    kprintf("**TEST: Random Used frame status: %i **\n", test_frame(0x9fc00+0x1000));
+    kprintf("**TEST: Random Used frame status: %i **\n", test_frame(0x7fe0000 + 0x1000));
     delay(3.0);
     if (mem_end_page <= 0) {
         /*
@@ -171,11 +227,13 @@ void initialise_paging() {
         PANIC("Couldn't enable paging: not enough memory");
         return;  // Not enough memory
     }
+    kprint("Creating Kernel Directory \n");
     // Let's make a page directory.
     kernel_directory = (page_directory_t *)kmalloc_a(sizeof(page_directory_t));
     memset(kernel_directory, 0, sizeof(page_directory_t));
     current_directory = kernel_directory;
-
+    kprint("Created \n");
+    delay(2.0);
     // Map some pages in the kernel heap area.
     // Here we call get_page but not alloc_frame. This causes page_table_t's
     // to be created where necessary. We can't allocate frames yet because they
@@ -184,7 +242,8 @@ void initialise_paging() {
     int i = 0;
     for (i = KHEAP_START; i < KHEAP_START + KHEAP_INITIAL_SIZE; i += 0x1000)
         get_page(i, 1, kernel_directory);
-
+    kprint("Allocated memory for the heap \n");
+    delay(2);
     // We need to identity map (phys addr = virt addr) from
     // 0x0 to the end of used memory, so we can access this
     // transparently, as if paging wasn't enabled.
@@ -201,14 +260,19 @@ void initialise_paging() {
         alloc_frame(get_page(i, 1, kernel_directory), 0, 0);
         i += 0x1000;
     }
+    kprint("Identity mapped \n");
+    delay(2);
 
     // Now allocate those pages we mapped earlier.
     for (i = KHEAP_START; i < KHEAP_START + KHEAP_INITIAL_SIZE; i += 0x1000)
         alloc_frame(get_page(i, 1, kernel_directory), 0, 0);
-
+    kprint("Allocated mem for heap pt2 \n");
+    delay(2);
     // Before we enable paging, we must register our page fault handler.
     registerInterruptHandler(14, page_fault, NF);
 
+    kprint("Switching dirs \n");
+    delay(2);
     // Now, enable paging!
     switch_page_directory(kernel_directory);
 
