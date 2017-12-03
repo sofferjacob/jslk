@@ -9,6 +9,7 @@
 #include <string.h>
 
 extern heap_t* kheap;
+extern uint32_t end;
 
 /**
    Handler for page faults.
@@ -187,10 +188,16 @@ int initRegions(multiboot_info_t* bootinfo) {
         kprint("Found section ");kernelPrintDec(regNum);kprint(" of type ");kprint(memTypes[mmap->type]);kprint(". \n");
         kprint("Section base: ");kernelPrintHex(mmap->base_addr_low); kprint("\n");
         if (mmap->type == 2) {
-          for (uint64_t i = 0; i < mmap->length_low; i += 0x1000) {
-              if (mmap->base_addr_low + i > 0xFFFFFFFF) break;
-              set_frame((mmap->base_addr_low + i) /*& 0xFFFFF000*/);
-          }
+          uint64_t aligned_start = (mmap->base_addr_low + 0x0000000000000FFF) & 0xFFFFFFFFFFFFF000; 
+          if (aligned_start < 0x00000000FFFFFFFF) {
+              uint64_t aligned_end = (mmap->base_addr_low + mmap->length_low) & 0xFFFFFFFFFFFFF000;
+              if (aligned_end > 0x0000000100000000) {
+                  aligned_end = 0x0000000100000000;
+              }
+              for (uint64_t i = aligned_start; i < aligned_end; i += 0x1000) {
+                  set_frame(i);
+              }
+          } 
           kprintf("Deinitialized region %i\n", regNum);
         }
         mmap = (memory_map_t*)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
@@ -253,7 +260,8 @@ void initialise_paging() {
     // computed on-the-fly rather than once at the start.
     // Allocate a lil' bit extra so the kernel heap can be
     // initialised properly.
-    i = 0;
+    //i = 0;
+    i = 0xFA001;
     while (i < placement_address + 0x1000)
     {
         // Kernel code is readable but not writeable from userspace.
