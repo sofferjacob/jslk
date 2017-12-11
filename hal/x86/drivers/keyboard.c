@@ -132,10 +132,11 @@ void keyboard_handler(regs_t regs)
         *  to the above layout to correspond to 'shift' being
         *  held. If shift is held using the larger lookup table,
         *  you would add 128 to the scancode when you look for it */
+        /*
         if (scancode == 28) {
             jsh(inbuf);
             inbuf[0] = '\0';
-        }
+        }*/
         if (shift == true) {
             kputc(capsus[scancode]);
             append(inbuf, capsus[scancode]);
@@ -162,5 +163,5 @@ char* read() {
     if (scancode == 28) {
         return inbuf;
     }
-    return -1;
+    return "-1";
 }

@@ -179,7 +179,7 @@ int initRegions(multiboot_info_t* bootinfo) {
     if (!(bootinfo->flags & MULTIBOOT_INFO_MEM_MAP)) {
         PANIC("Couldn't load memory map");
     }
-    memory_map_t* mmap = bootinfo->mmap_addr;
+    memory_map_t* mmap = (memory_map_t*)bootinfo->mmap_addr;
     uint8_t regNum = 0;
     while (mmap < bootinfo->mmap_addr + bootinfo->mmap_length) {
         if (mmap->type > 4) {
@@ -234,13 +234,10 @@ void initialise_paging() {
         PANIC("Couldn't enable paging: not enough memory");
         return;  // Not enough memory
     }
-    kprint("Creating Kernel Directory \n");
     // Let's make a page directory.
     kernel_directory = (page_directory_t *)kmalloc_a(sizeof(page_directory_t));
     memset(kernel_directory, 0, sizeof(page_directory_t));
     current_directory = kernel_directory;
-    kprint("Created \n");
-    delay(2.0);
     // Map some pages in the kernel heap area.
     // Here we call get_page but not alloc_frame. This causes page_table_t's
     // to be created where necessary. We can't allocate frames yet because they
@@ -249,8 +246,6 @@ void initialise_paging() {
     int i = 0;
     for (i = KHEAP_START; i < KHEAP_START + KHEAP_INITIAL_SIZE; i += 0x1000)
         get_page(i, 1, kernel_directory);
-    kprint("Allocated memory for the heap \n");
-    delay(2);
     // We need to identity map (phys addr = virt addr) from
     // 0x0 to the end of used memory, so we can access this
     // transparently, as if paging wasn't enabled.
@@ -261,26 +256,20 @@ void initialise_paging() {
     // Allocate a lil' bit extra so the kernel heap can be
     // initialised properly.
     //i = 0;
-    i = 0xFA001;
+    i = 0;
     while (i < placement_address + 0x1000)
     {
         // Kernel code is readable but not writeable from userspace.
         alloc_frame(get_page(i, 1, kernel_directory), 0, 0);
         i += 0x1000;
     }
-    kprint("Identity mapped \n");
-    delay(2);
 
     // Now allocate those pages we mapped earlier.
     for (i = KHEAP_START; i < KHEAP_START + KHEAP_INITIAL_SIZE; i += 0x1000)
         alloc_frame(get_page(i, 1, kernel_directory), 0, 0);
-    kprint("Allocated mem for heap pt2 \n");
-    delay(2);
     // Before we enable paging, we must register our page fault handler.
     registerInterruptHandler(14, page_fault, NF);
 
-    kprint("Switching dirs \n");
-    delay(2);
     // Now, enable paging!
     switch_page_directory(kernel_directory);
 

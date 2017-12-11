@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <va_list.h> // for when I add flags to registerInterrupt()
 
-#define KERNEL_DEBUG
-
 static hiInterrupt_t hiIntHandler[TOTAL_INTERRUPTS];
 static chainedInterrupt_t chainedInterrupts[TOTAL_INTERRUPTS];
 

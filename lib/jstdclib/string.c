@@ -79,3 +79,20 @@ int strcmp(string s1, string s2) {
     }
     return s1[i] - s2[i];
 }
+
+char *strcpy(char *dest, const char *src)
+{
+    do
+    {
+        *dest++ = *src++;
+    } while (*src != 0);
+}
+
+// Copy len bytes from src to dest.
+void memcpy(uint8_t *dest, const uint8_t *src, uint32_t len)
+{
+    const uint8_t *sp = (const uint8_t *)src;
+    uint8_t *dp = (uint8_t *)dest;
+    for (; len != 0; len--)
+        *dp++ = *sp++;
+}

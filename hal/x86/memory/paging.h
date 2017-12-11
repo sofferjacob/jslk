@@ -54,7 +54,7 @@ void initialise_paging();
    Causes the specified page directory to be loaded into the
    CR3 register.
 **/
-void switch_page_directory(page_directory_t *new);
+void switch_page_directory(page_directory_t* dir);
 
 /**
    Retrieves a pointer to the page required.
@@ -67,5 +67,8 @@ void start_pmm(multiboot_info_t* bootinfo);
 void init_region(uint32_t base, uint32_t size);
 void deinit_region(uint32_t base, uint32_t size);
 uint32_t getTotalFrames();
+
+int alloc_frame(page_t *page, int is_kernel, int is_writeable);
+void free_frame(page_t *page);
 
 #endif
