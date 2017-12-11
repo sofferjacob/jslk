@@ -50,6 +50,7 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
 $ brew install nasm
 $ brew install wget
 $ brew install qemu
+$ brew install xorriso
 $ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_mac_v.1.0.0.zip
 ```
 
@@ -60,6 +61,8 @@ On other operating systems the packages:
 * i386-elf toolchain (can be built using the scripts [here](https://github.com/sofferjacob/edison-toolchain))
 
 Can be built from source or installed from  other sources.
+
+> Note: GRUB must be cross-compiled for the i386-elf architecture (can be done with the toolchain). You can find instructions on how to do so [here.](http://wiki.osdev.org/GRUB_2#Installing_GRUB_2_on_OS_X)
 
 ### Building
 
@@ -77,20 +80,24 @@ To clean the source tree:
 $ make clean
 ```
 
-And to build a floppy image on macOS:
+And to build an ISO image:
 ```
 $ make floppy
-```
-
-On Linux:
-```
-$ make image
 ```
 
 You can also pass the target as an argument to make instead of defining it as a variable:
 ```
 $ make TARGET=x64common clean all floppy run
 ```
+
+To build the initird:
+```
+$ ./make_initrd file1 file1 file2 file2 ... file5 file5
+```
+**Note:** The included utility only works in macOS. Recompile the utility for your OS using:
+```
+$ gcc initrd/make_initrd.c -o make_initrd
+````
 
 ## Testing
 
