@@ -62,7 +62,7 @@ On other operating systems the packages:
 
 Can be built from source or installed from  other sources.
 
-> Note: GRUB must be cross-compiled for the i386-elf architecture (can be done with the toolchain). You can find instructions on how to do so [here.](http://wiki.osdev.org/GRUB_2#Installing_GRUB_2_on_OS_X)
+> Note: GRUB must be cross-compiled for the i386-elf architecture on any OS (can be done with the toolchain). You can find instructions on how to do so [here.](http://wiki.osdev.org/GRUB_2#Installing_GRUB_2_on_OS_X)
 
 ### Building
 
