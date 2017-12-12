@@ -279,7 +279,9 @@ int kprintf(string c, ...) {
         if (c[i] == '%') {
             if (c[i + 1] == 'i') {
                 integerArgs = va_arg(args, int);
-                kernelPrintDec(integerArgs);
+                char string_arg[20];
+                itoa(string_arg, 10, integerArgs);
+                kprint(string_arg);
             }
             else if (c[i + 1] == 's') {
                 strArgs = va_arg(args, string);

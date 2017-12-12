@@ -12,7 +12,7 @@ JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (al
 
 `docs`: Some documentation (writing in progress, thus incomplete).
 
-`floppyfs`: Filesystem used to build floppy image.
+`iso`: Filesystem used to build ISO image.
 
 `hal`: Hardware Abstraction Layer and API.
 

@@ -1,5 +1,5 @@
-# JLK Gitignore
-# Object Files
+# JSLK Gitignore Templates
+# Object Files 
 *.o
 *.d
 *.map
@@ -9,8 +9,8 @@
 *.a
 *.kernel
 *.elf
-kernel.img
-kernel7.img
+*.img
+*.iso
 
 # Other
 .vscode
