@@ -76,7 +76,7 @@ int kernel_main(multiboot_info_t* bootinfo) {
     placement_address = initrd_end;
     kprintf("placement address: %h \n");
     delay(2);
-    fs_root = initialise_initrd(initrd_location);
+    root_fs = initialise_initrd(initrd_location);
     if ((bootinfo->flags & MULTIBOOT_INFO_MEM_MAP)) {
         kprint("Bit is set \n");
     }

@@ -5,7 +5,7 @@
 #define INITRD_H
 
 #include <stdint.h>
-#include "vfs.h"
+#include <vfs.h>
 
 typedef struct
 {
@@ -22,6 +22,6 @@ typedef struct
 
 // Initialises the initial ramdisk. It gets passed the address of the multiboot module,
 // and returns a completed filesystem node.
-fs_node_t *initialise_initrd(uint32_t location);
+FILE *initialise_initrd(uint32_t location);
 
 #endif

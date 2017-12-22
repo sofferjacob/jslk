@@ -5,6 +5,7 @@
 #include <va_list.h>
 #include <jslk.h>
 #include <heap.h>
+//#include <vfs.h>
 #include <vfs.h>
 #include <initrd.h>
 #include <assert.h>
@@ -34,13 +35,13 @@ int kernel_main() {
     PRINT_PREETY_TEXT("Testing VFS and initrd...");
     int i = 0;
     struct dirent *node = 0;
-    while ((node = readdir_fs(fs_root, i)) != 0)
+    while ((node = readdir_fs(root_fs, i)) != 0)
     {
         kprint("Found file ");
         kprint(node->name);
-        fs_node_t *fsnode = finddir_fs(fs_root, node->name);
+        FILE* fsnode = finddir_fs(root_fs, node->name);
 
-        if ((fsnode->flags & 0x7) == FS_DIRECTORY)
+        if (fsnode->type == FS_DIRECTORY)
         {
             kprint("\n\t(directory)\n");
         }
@@ -55,7 +56,7 @@ int kernel_main() {
 
             kprint("\"\n");
         }
-        i++;
+        i++; 
     }
     PRINT_PREETY_TEXT("Testing VMM...");
     uint32_t a = kmalloc(8);

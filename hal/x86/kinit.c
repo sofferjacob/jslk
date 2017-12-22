@@ -5,6 +5,7 @@
 #include <va_list.h>
 #include <jslk.h>
 #include <heap.h>
+// #include <vfs.h>
 #include <vfs.h>
 #include <initrd.h>
 #include <assert.h>
@@ -39,7 +40,7 @@ int kinit(multiboot_info_t *bootinfo)
     initialise_paging();
 
     // Initialise the initial ramdisk, and set it as the filesystem root.
-    fs_root = initialise_initrd(initrd_location);
+    root_fs = initialise_initrd(initrd_location);
     keyboard_install();
     kernel_main();
     /*

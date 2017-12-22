@@ -62,7 +62,7 @@ On other operating systems the packages:
 
 Can be built from source or installed from  other sources.
 
-> Note: GRUB must be cross-compiled for the i386-elf architecture on any OS (can be done with the toolchain). You can find instructions on how to do so [here.](http://wiki.osdev.org/GRUB_2#Installing_GRUB_2_on_OS_X)
+> Note: GRUB must be re-compiled with the i386-elf architecture as a target on any OS. You can find instructions on how to do so [here.](http://wiki.osdev.org/GRUB_2#Installing_GRUB_2_on_OS_X)
 
 ### Building
 
@@ -94,7 +94,7 @@ To build the initird:
 ```
 $ ./make_initrd file1 file1 file2 file2 ... file5 file5
 ```
-**Note:** The included utility only works in macOS. Recompile the utility for your OS using:
+**Note:** The included utility only works in macOS. Recompile the utility for your host OS using:
 ```
 $ gcc initrd/make_initrd.c -o make_initrd
 ````
@@ -119,7 +119,7 @@ Check [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines on how to contribute t
 
 ## Documentation
 
-You may find the documentation for tge project in the [Wiki](https://github.com/sofferjacob/jslk/wiki) or in the `docs` folder. Right now you the documentation is different in this places, but I will try to make it the same in the future. Also the documentation is in the writing and may be incomplete.
+You may find the documentation for the project in the [Wiki](https://github.com/sofferjacob/jslk/wiki) or in the `docs` folder. Right now you the documentation is different in this places, but I will try to make it the same in the future. Also the documentation is in the writing and may be incomplete.
 
 ## License
 
