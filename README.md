@@ -14,6 +14,8 @@ JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (al
 
 `iso`: Filesystem used to build ISO image.
 
+`initrd`: Files used to build the initrd.
+
 `hal`: Hardware Abstraction Layer and API.
 
 `include`: Public kernel headers.
@@ -22,7 +24,7 @@ JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (al
 
 `lib`: Kernel Libraries.
 
-`tools`: Shouldn't be there, just ignore it for now.
+`target`: Target build recipes.
 
 ## Supported Architectures
 * x86 (`x86common`).
