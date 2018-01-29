@@ -131,12 +131,17 @@ struct dirent dirent;
 
 static uint32_t initrd_read(FILE *node, uint32_t offset, uint32_t size, uint8_t *buffer)
 {
+    // Clear the EOF flag
+    node->eof = 0;
     initrd_file_header_t header = file_headers[node->ino];
     if (offset > header.length)
         return 0;
     if (offset + size > header.length)
         size = header.length - offset;
     memcpy(buffer, (uint8_t *)(header.offset + offset), size);
+    if (offset + size >= header.length) {
+        node->eof = 1;
+    }
     return size;
 }
 
@@ -177,17 +182,17 @@ FILE *initialise_initrd(uint32_t location)
     initrd_header = (initrd_header_t *)location;
     file_headers = (initrd_file_header_t *)(location + sizeof(initrd_header_t));
 
-    static VOLUME initrd;
-    strcpy(initrd.name, "initrd");
-    initrd.read = initrd_read;
-    initrd.readdir = initrd_readdir;
-    initrd.finddir = initrd_finddir;
+    VOLUME* initrd = kmalloc(sizeof(VOLUME));
+    strcpy(initrd->name, "initrd");
+    initrd->read = initrd_read;
+    initrd->readdir = initrd_readdir;
+    initrd->finddir = initrd_finddir;
     // Initialise the root directory.
     initrd_root = (FILE *)kmalloc(sizeof(FILE));
     strcpy(initrd_root->name, "initrd");
     //initrd_root->mask = initrd_root->uid = initrd_root->gid = initrd_root->inode = initrd_root->length = 0;
     initrd_root->type = FS_DIRECTORY;
-    initrd_root->volume = &initrd;
+    initrd_root->volume = initrd;
     // initrd_root->read = 0;
     // initrd_root->write = 0;
     // initrd_root->open = 0;
@@ -201,7 +206,7 @@ FILE *initialise_initrd(uint32_t location)
     initrd_dev = (FILE *)kmalloc(sizeof(FILE));
     strcpy(initrd_dev->name, "dev");
     initrd_dev->type = FS_DIRECTORY;
-    initrd_dev->volume = &initrd;
+    initrd_dev->volume = initrd;
     // initrd_dev->read = 0;
     // initrd_dev->write = 0;
     // initrd_dev->open = 0;
@@ -228,7 +233,7 @@ FILE *initialise_initrd(uint32_t location)
         root_nodes[i].length = file_headers[i].length;
         root_nodes[i].ino = i;
         root_nodes[i].type = FS_FILE;
-        root_nodes[i].volume = &initrd;
+        root_nodes[i].volume = initrd;
         // root_nodes[i].read = &initrd_read;
         // root_nodes[i].write = 0;
         // root_nodes[i].readdir = 0;

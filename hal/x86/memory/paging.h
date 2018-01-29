@@ -55,6 +55,7 @@ void initialise_paging();
    CR3 register.
 **/
 void switch_page_directory(page_directory_t* dir);
+page_directory_t* clone_directory(page_directory_t* src);
 
 /**
    Retrieves a pointer to the page required.
@@ -70,5 +71,24 @@ uint32_t getTotalFrames();
 
 int alloc_frame(page_t *page, int is_kernel, int is_writeable);
 void free_frame(page_t *page);
+
+typedef struct
+{
+    uint32_t gs;
+    uint32_t fs;
+    uint32_t es;
+    uint32_t ds;
+    uint32_t eax;
+    uint32_t ebx;
+    uint32_t ecx;
+    uint32_t edx;
+    uint32_t esi;
+    uint32_t edi;
+    uint32_t esp;
+    uint32_t ebp;
+    uint32_t eip;
+    uint32_t cs;
+    uint32_t flags;
+} stack_frame, stack_frame_t;
 
 #endif

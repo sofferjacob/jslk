@@ -39,8 +39,9 @@ typedef struct _FILE {
     uint32_t length;    // Length
     uint8_t type;       // File type (see defines above)
     uint32_t ino;       // Inode number
-    VOLUME* volume;      // Owning volume
+    VOLUME* volume;     // Owning volume
     uint32_t impl;      // Reserved for the implementation
+    uint8_t eof;        // EOF flag
     struct _FILE* ptr;  // Used by mountpoints / symlinks
 } FILE, file_t;
 

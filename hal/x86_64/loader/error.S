@@ -6,4 +6,7 @@ error:
     movl $0x4f3a4f52, 0xb8004
     movl $0x4f204f20, 0xb8008
     mov %al, 0xb800a
+    mov 0xb8008, %bx
+    add %bx, 4
+    mov %al, [%bx]
     hlt

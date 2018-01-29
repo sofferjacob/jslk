@@ -2,9 +2,6 @@
 
 JSLK is a simple 32-bit hobby kernel designed to run on the x86 architecture (although portability has been taken into consideration). It was started in August 2017 with the objective of learning how a computer operating system works and to improve the coding skills of the main developer. The kernel is mostly written in C with some bits of assembly and has partial compatibility with C++ (a runtime is provided). Some of its features are: extensive HAL API, System V ABI compatibility, memory management, interrupt handling, VGA driver, timers and delays, some synchronization primitives, a growing home-made C library, etc.
 
-> Note on development speed: It is very likely I won't have access to a computer for the next 3 weeks, 
-therefore development may cease for this period of time.
-
 [![Build Status](https://travis-ci.org/sofferjacob/jslk.svg?branch=master)](https://travis-ci.org/sofferjacob/jslk)
 [![GitHub license](https://img.shields.io/badge/license-GPL3-yellow.svg)](https://github.com/sofferjacob/jslk/blob/master/LICENSE)
 [![Project Status](https://img.shields.io/badge/project-active_development-brightgreen.svg)](https://github.com/sofferjacob/jslk/blob/x64/docs/status.md)
@@ -45,7 +42,7 @@ JSLK can be built on any UNIX like system, such as any Linux distribution, FreeB
 
 On Linux:
 ```
-$ sudo apt-get install nasm wget git qemu  # Change apt-get install for whatever package manager you are using.
+$ sudo apt-get install nasm wget git qemu xorriso  # Change apt-get install for whatever package manager you are using.
 $ wget https://github.com/sofferjacob/edison-toolchain/releases/download/1.0.0/sierra_toolchain_linux_x86_64_v.1.0.0.tar.gz
 ```
 

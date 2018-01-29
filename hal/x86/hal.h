@@ -9,6 +9,7 @@ extern "C" {
 #include "io/vga.h"
 #include "memory/paging.h"
 #include "memory/kheap.h"
+#include "drivers/rtc/rtc.h"
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -131,7 +132,7 @@ uint32_t kmalloc_ap(uint32_t sz, uint32_t *phys); // Page Aligned, returns physi
 // Keyboard
 void keyboard_install();
 static char inbuf[1024];
-char* read();
+int read_key();
 
 // Other functions
 #define PANIC(X) full_system_panic(X, __FILE__, __LINE__)

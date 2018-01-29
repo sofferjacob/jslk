@@ -159,9 +159,10 @@ void keyboard_install() {
     registerInterruptHandler(IRQ1, keyboard_handler, NF);
 }
 
-char* read() {
+int read_key() {
     if (scancode == 28) {
-        return inbuf;
+        return 0;
+    } else {
+        return 1;
     }
-    return "-1";
 }

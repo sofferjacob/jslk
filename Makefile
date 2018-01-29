@@ -47,13 +47,17 @@ clean:
 
 image:
 	cp jslk.kernel iso/boot
+	cp initrd.img iso/mods
 	grub-mkrescue -o jslk.iso iso
+
+inird:
+	./make_initrd initrd/test.txt initrd/test.txt initrd/test2.txt initrd/test2.txt initrd/hpotter.txt initrd/hpotter.txt
 
 run:
 	qemu-system-i386 -cdrom jslk.iso
 
 build:
-	make clean all image run
+	make clean all inird image run
 
 # ===================================== #
 #    Floppy Images are now obsolete,    #

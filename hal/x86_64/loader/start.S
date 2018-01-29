@@ -31,7 +31,7 @@ _start:
 	# Transfer control to the main kernel.
 	# call kernel_main
     movl   $0x2f4b2f4f,0xb8000
-	mov    ERR_CODE0,%al
+	mov    ERR_CODE1,%al
 	call error
 	# Hang if kernel_main unexpectedly returns.
 	.hang: jmp .hang

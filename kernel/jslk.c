@@ -19,6 +19,27 @@ static void PRINT_PRETTY_TEXT(char* text) {
     kprintf("%s \n", text);
 }
 
+void open(char* file_name) {
+    char buf[256];
+    FILE* fsnode = finddir_fs(root_fs, file_name);
+    if (fsnode == 0) {
+        kprintf("ERROR: File %s not found on disk. \n", file_name);
+        return;
+    }
+    uint32_t length = fsnode->length;
+    uint32_t bread = 0;
+    while (bread < length) {
+        uint32_t sz = read_fs(fsnode, bread, 256, (uint8_t *)buf);
+        int j;
+        for (j = 0; j < sz; j++)
+            kputc(buf[j]);
+        bread += sz;
+        kprint("\n press enter to continue \n");
+        while(read_key() != 0);
+    }
+    kprint("\n");
+}
+
 int kernel_main() {
     clear_console();
     kprint("Welcome to the JSLK Kernel! \n");
@@ -32,6 +53,8 @@ int kernel_main() {
     kprint("Build number: "); kernelPrintDec(KERNEL_BUILD_NUM); kprint("\n");
     delay(2);
     uint8_t kern = getColor(vga_green, vga_black);
+    getCurrentTime();
+    delay(2);
     PRINT_PRETTY_TEXT("Testing VFS and initrd...");
     int i = 0;
     struct dirent *node = 0;
@@ -47,7 +70,8 @@ int kernel_main() {
         }
         else
         {
-            kprint("\n\t contents: \"");
+            kprintf("\n\t length: %i \n", fsnode->length);
+            kprint("\t contents: \"");
             char buf[256];
             uint32_t sz = read_fs(fsnode, 0, 256, (uint8_t*)buf);
             int j;
@@ -58,6 +82,10 @@ int kernel_main() {
         }
         i++; 
     }
+    FILE* hpot = finddir_fs(root_fs, "initrd/hpotter.txt");
+    kprintf("Initial file status: %i", hpot->eof);
+    open("initrd/hpotter.txt");
+    kprintf("File status: %i", hpot->eof);
     PRINT_PRETTY_TEXT("Testing VMM...");
     uint32_t a = kmalloc(8);
     uint32_t b = kmalloc(8);

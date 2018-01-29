@@ -15,11 +15,11 @@ static string intDescription[] = {
     "Out of bounds exception",
     "Invalid opcode",
     "No coprocessor exception",
-    "Double Fault",
+    "Double Fault", // 8
     "Coprocessor segment overrun",
-    "Bad TSS",
-    "Segment not present",
-    "Stack fault",
+    "Bad TSS", // 10
+    "Segment not present", // 11
+    "Stack fault",  // 12
     "General Protection Fault",
     "Page fault",
     "Unknown interrupt exception",
