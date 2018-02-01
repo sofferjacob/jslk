@@ -2,6 +2,7 @@
 #include "../../hal.h"
 
 enum {
+    RTC_STATUS = 0x0A,
     RTC_SECONDS = 0,
     RTC_MINUTES = 2,
     RTC_HOURS = 4,
@@ -12,41 +13,55 @@ enum {
 };
 
 bool checkRtcUpdate() {
-    bool isSet;
-    asm volatile ("cli");
-    outb(0x70, (0x0A | 0x80));
-    isSet = inb(0x71);
-    outb(0x70, 0x0);  // just to re-enable NMI's
-    asm volatile ("sti");
-    return isSet;
+    outb(0x70, RTC_STATUS);
+    return (inb(0x71) & 0x80);
 }
 
-void dumpRtc(uint16_t* dump) {
-    asm volatile ("cli");
-    for (uint8_t i = 0; i < 10; i++) {
-        outb(0x70, (i|0x80));
-        dump[i] = inb(0x71);
-    }
-    outb(0x70, 0x0);
-    asm volatile ("sti");
+uint8_t getRtcReg(int8_t reg) {
+    outb(0x70, reg);
+    return inb(0x71);
 }
 
-rtcTime getCurrentTime() {
-    uint16_t* firstTake;
-    uint16_t* secondTake;
+rtcTime_t getRtcTime() {
+    rtcTime_t result;
+    uint8_t seconds;
+    uint8_t minutes;
+    uint8_t hours;
+    uint8_t year;
+    uint8_t week_day;
+    uint8_t month_day;
+    uint8_t month;
     do {
-        if (!checkRtcUpdate()) {
-            dumpRtc(firstTake);
-        }
-        if (!checkRtcUpdate()) {
-          dumpRtc(secondTake);
-        }
-    } while ((firstTake[RTC_SECONDS] != secondTake[RTC_SECONDS]) ||
-            (firstTake[RTC_MINUTES] != secondTake[RTC_MINUTES]) ||
-            (firstTake[RTC_HOURS] != secondTake[RTC_HOURS]) ||
-            (firstTake[RTC_WEEKDAY] != secondTake[RTC_WEEKDAY]) ||
-            (firstTake[RTC_MONTHDAY] != secondTake[RTC_MONTHDAY]) ||
-            (firstTake[RTC_MONTH] != secondTake[RTC_MONTH]) ||
-            (firstTake[RTC_YEAR] != secondTake[RTC_YEAR]));
-    kprintf("hours: %i \n", secondTake[RTC_HOURS]);
+        while (checkRtcUpdate()) {}
+        seconds = getRtcReg(RTC_SECONDS);
+        minutes = getRtcReg(RTC_MINUTES);
+        hours = getRtcReg(RTC_HOURS);
+        week_day = getRtcReg(RTC_WEEKDAY);
+        month_day = getRtcReg(RTC_MONTHDAY);
+        month = getRtcReg(RTC_MONTH);
+        year = getRtcReg(RTC_YEAR);
+        do {
+            result.seconds = seconds;
+            result.minutes = minutes;
+            result.hours = hours;
+            result.week_day = week_day;
+            result.month_day = month_day;
+            result.month = month;
+            result.year = year;
+        } while (checkRtcUpdate());
+        seconds = getRtcReg(RTC_SECONDS);
+        minutes = getRtcReg(RTC_MINUTES);
+        hours = getRtcReg(RTC_HOURS);
+        week_day = getRtcReg(RTC_WEEKDAY);
+        month_day = getRtcReg(RTC_MONTHDAY);
+        month = getRtcReg(RTC_MONTH);
+        year = getRtcReg(RTC_YEAR);
+    } while (seconds != result.seconds ||
+             minutes != result.minutes ||
+             hours != result.hours ||
+             week_day != result.week_day ||
+             month_day != result.month_day ||
+             month != result.month ||
+             year != result.year);
+    return result;
 }

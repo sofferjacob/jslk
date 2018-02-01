@@ -1,5 +1,6 @@
 #include <hal.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <version.h>
 #include <timer.h>
 #include <va_list.h>
@@ -53,7 +54,7 @@ int kernel_main() {
     kprint("Build number: "); kernelPrintDec(KERNEL_BUILD_NUM); kprint("\n");
     delay(2);
     uint8_t kern = getColor(vga_green, vga_black);
-    getCurrentTime();
+    rtcTime_t time =  getRtcTime();
     delay(2);
     PRINT_PRETTY_TEXT("Testing VFS and initrd...");
     int i = 0;
