@@ -9,7 +9,8 @@ enum {
     RTC_WEEKDAY = 6,
     RTC_MONTHDAY = 7,
     RTC_MONTH = 8,
-    RTC_YEAR = 9
+    RTC_YEAR = 9,
+    RTC_REGB = 0x0B
 };
 
 bool checkRtcUpdate() {
@@ -24,13 +25,13 @@ uint8_t getRtcReg(int8_t reg) {
 
 rtcTime_t getRtcTime() {
     rtcTime_t result;
-    uint8_t seconds;
-    uint8_t minutes;
-    uint8_t hours;
-    uint8_t year;
-    uint8_t week_day;
-    uint8_t month_day;
-    uint8_t month;
+    uint16_t seconds;
+    uint16_t minutes;
+    uint16_t hours;
+    uint16_t year;
+    uint16_t week_day;
+    uint16_t month_day;
+    uint16_t month;
     do {
         while (checkRtcUpdate()) {}
         seconds = getRtcReg(RTC_SECONDS);
@@ -41,6 +42,20 @@ rtcTime_t getRtcTime() {
         month = getRtcReg(RTC_MONTH);
         year = getRtcReg(RTC_YEAR);
         do {
+            if (!(RTC_REGB & 0x04))
+            {
+                seconds = (seconds & 0x0F) + ((seconds / 16) * 10);
+                minutes = (minutes & 0x0F) + ((minutes / 16) * 10);
+                hours = ((hours & 0x0F) + (((hours & 0x70) / 16) * 10)) | (hours & 0x80);
+                week_day = (week_day & 0x0F) + ((week_day / 16) * 10);
+                month_day = (month_day & 0x0F) + ((month_day / 16) * 10);
+                month = (month & 0x0F) + ((month / 16) * 10);
+                year = (year & 0x0F) + ((year / 16) * 10);
+            }
+            if (!(RTC_REGB & 0x02) && (hours & 0x80))
+            {
+                hours = ((hours & 0x7F) + 12) % 24;
+            }
             result.seconds = seconds;
             result.minutes = minutes;
             result.hours = hours;
@@ -56,6 +71,20 @@ rtcTime_t getRtcTime() {
         month_day = getRtcReg(RTC_MONTHDAY);
         month = getRtcReg(RTC_MONTH);
         year = getRtcReg(RTC_YEAR);
+        if (!(RTC_REGB & 0x04))
+        {
+            seconds = (seconds & 0x0F) + ((seconds / 16) * 10);
+            minutes = (minutes & 0x0F) + ((minutes / 16) * 10);
+            hours = ((hours & 0x0F) + (((hours & 0x70) / 16) * 10)) | (hours & 0x80);
+            week_day = (week_day & 0x0F) + ((week_day / 16) * 10);
+            month_day = (month_day & 0x0F) + ((month_day / 16) * 10);
+            month = (month & 0x0F) + ((month / 16) * 10);
+            year = (year & 0x0F) + ((year / 16) * 10);
+        }
+        if (!(RTC_REGB & 0x02) && (hours & 0x80))
+        {
+            hours = ((hours & 0x7F) + 12) % 24;
+        }
     } while (seconds != result.seconds ||
              minutes != result.minutes ||
              hours != result.hours ||
@@ -65,3 +94,14 @@ rtcTime_t getRtcTime() {
              year != result.year);
     return result;
 }
+
+/*
+// 0 seconds, 1 minutes, 2 hours, 3 weekday
+// 4 month day, 5 month, 6 year
+void rtcWrite(uint16_t val, uint8_t pos) {
+    if (!(RTC_REGB & 0x04)) {
+        if (pos == 2) {
+            val = ( (val  0x0F))
+        }
+    }
+}*/

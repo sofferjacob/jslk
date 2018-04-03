@@ -1,6 +1,3 @@
-// paging.c -- Defines the interface for and structures relating to paging.
-//             Written for JamesM's kernel development tutorials.
-
 #include "paging.h"
 #include "kheap.h"
 #include <stdint.h>
@@ -8,7 +5,7 @@
 #include <heap.h>
 #include <string.h>
 
-extern heap_t* kheap;
+extern heap_t *kheap;
 extern uint32_t end;
 
 /**
@@ -17,10 +14,10 @@ extern uint32_t end;
 void page_fault(regs_t regs);
 
 // The kernel's page directory
-page_directory_t *kernel_directory=0;
+page_directory_t *kernel_directory = 0;
 
 // The current page directory;
-page_directory_t *current_directory=0;
+page_directory_t *current_directory = 0;
 
 // A bitset of frames - used or free.
 /*static*/ uint32_t *frames;
@@ -31,13 +28,14 @@ page_directory_t *current_directory=0;
 // Defined in kheap.c
 extern uint32_t placement_address;
 
-uint32_t getTotalFrames() {
+uint32_t getTotalFrames()
+{
     return nframes;
 }
 
 // Macros used in the bitset algorithms.
-#define INDEX_FROM_BIT(a) (a/(8*4))
-#define OFFSET_FROM_BIT(a) (a%(8*4))
+#define INDEX_FROM_BIT(a) (a / (8 * 4))
+#define OFFSET_FROM_BIT(a) (a % (8 * 4))
 /*
 // Static function to set a bit in the frames bitset
 static void set_frame(uint32_t frame_addr)
@@ -48,17 +46,18 @@ static void set_frame(uint32_t frame_addr)
     frames[idx] |= (0x1 << off);
 } */
 
-void set_frame(uint32_t frame_addr) {
-		uint32_t frame  = frame_addr / 0x1000;
-		uint32_t index  = INDEX_FROM_BIT(frame);
-		uint32_t offset = OFFSET_FROM_BIT(frame);
-		frames[index] |= ((uint32_t)0x1 << offset);
+void set_frame(uint32_t frame_addr)
+{
+    uint32_t frame = frame_addr / 0x1000;
+    uint32_t index = INDEX_FROM_BIT(frame);
+    uint32_t offset = OFFSET_FROM_BIT(frame);
+    frames[index] |= ((uint32_t)0x1 << offset);
 }
 
 // Static function to clear a bit in the frames bitset
 static void clear_frame(uint32_t frame_addr)
 {
-    uint32_t frame = frame_addr/0x1000;
+    uint32_t frame = frame_addr / 0x1000;
     uint32_t idx = INDEX_FROM_BIT(frame);
     uint32_t off = OFFSET_FROM_BIT(frame);
     frames[idx] &= ~(0x1 << off);
@@ -67,7 +66,7 @@ static void clear_frame(uint32_t frame_addr)
 // Static function to test if a bit is set.
 static uint32_t test_frame(uint32_t frame_addr)
 {
-    uint32_t frame = frame_addr/0x1000;
+    uint32_t frame = frame_addr / 0x1000;
     uint32_t idx = INDEX_FROM_BIT(frame);
     uint32_t off = OFFSET_FROM_BIT(frame);
     return (frames[idx] & (0x1 << off));
@@ -85,9 +84,9 @@ static uint32_t first_frame()
             for (j = 0; j < 32; j++)
             {
                 uint32_t toTest = 0x1 << j;
-                if ( !(frames[i]&toTest) )
+                if (!(frames[i] & toTest))
                 {
-                    return i*4*8+j;
+                    return i * 4 * 8 + j;
                 }
             }
         }
@@ -97,8 +96,9 @@ static uint32_t first_frame()
 // Function to allocate a frame.
 int alloc_frame(page_t *page, int is_kernel, int is_writeable)
 {
-    if (used_frames == nframes) {
-        return 1;  // We don't have enough memory, return.
+    if (used_frames == nframes)
+    {
+        return 1; // We don't have enough memory, return.
     }
     if (page->frame != 0)
     {
@@ -111,10 +111,10 @@ int alloc_frame(page_t *page, int is_kernel, int is_writeable)
         {
             PANIC("No free frames");
         }
-        set_frame(idx*0x1000);
+        set_frame(idx * 0x1000);
         page->present = 1;
-        page->rw = (is_writeable)?1:0;
-        page->user = (is_kernel)?0:1;
+        page->rw = (is_writeable) ? 1 : 0;
+        page->user = (is_kernel) ? 0 : 1;
         page->frame = idx;
     }
 }
@@ -123,7 +123,7 @@ int alloc_frame(page_t *page, int is_kernel, int is_writeable)
 void free_frame(page_t *page)
 {
     uint32_t frame;
-    if (!(frame=page->frame))
+    if (!(frame = page->frame))
     {
         return;
     }
@@ -145,7 +145,6 @@ void init_region(uint32_t base, size_t size) {
     }
     set_frame(0);
 } 
-
 // Deinitialize a region in the PMM
 void deinit_region(uint32_t base, size_t size) {
     uint32_t align = base / 0x1000;
@@ -157,10 +156,12 @@ void deinit_region(uint32_t base, size_t size) {
     }
 }*/
 
-void deinit_region(uint32_t addr, uint32_t size) {
-    uint32_t address = addr/0x1000;
+void deinit_region(uint32_t addr, uint32_t size)
+{
+    uint32_t address = addr / 0x1000;
     uint32_t finalsize = addr + size;
-    while (address < size) {
+    while (address < size)
+    {
         set_frame(address);
         nframes--;
         address += 0x1000;
@@ -174,44 +175,59 @@ string memTypes[] = {
     "ACPI Reclaim",
     "ACPI NVS Memory"};
 
-int initRegions(multiboot_info_t* bootinfo) {
+int initRegions(multiboot_info_t *bootinfo)
+{
     // Check GRUB passed the memmory map
-    if (!(bootinfo->flags & MULTIBOOT_INFO_MEM_MAP)) {
+    if (!(bootinfo->flags & MULTIBOOT_INFO_MEM_MAP))
+    {
         PANIC("Couldn't load memory map");
     }
-    memory_map_t* mmap = (memory_map_t*)bootinfo->mmap_addr;
+    memory_map_t *mmap = (memory_map_t *)bootinfo->mmap_addr;
     uint8_t regNum = 0;
-    while (mmap < bootinfo->mmap_addr + bootinfo->mmap_length) {
-        if (mmap->type > 4) {
-          mmap->type = 2;
+    while (mmap < bootinfo->mmap_addr + bootinfo->mmap_length)
+    {
+        if (mmap->type > 4)
+        {
+            mmap->type = 2;
         }
-        kprint("Found section ");kernelPrintDec(regNum);kprint(" of type ");kprint(memTypes[mmap->type]);kprint(". \n");
-        kprint("Section base: ");kernelPrintHex(mmap->base_addr_low); kprint("\n");
-        if (mmap->type == 2) {
-          uint64_t aligned_start = (mmap->base_addr_low + 0x0000000000000FFF) & 0xFFFFFFFFFFFFF000; 
-          if (aligned_start < 0x00000000FFFFFFFF) {
-              uint64_t aligned_end = (mmap->base_addr_low + mmap->length_low) & 0xFFFFFFFFFFFFF000;
-              if (aligned_end > 0x0000000100000000) {
-                  aligned_end = 0x0000000100000000;
-              }
-              for (uint64_t i = aligned_start; i < aligned_end; i += 0x1000) {
-                  set_frame(i);
-              }
-          } 
-          kprintf("Deinitialized region %i\n", regNum);
+        kprint("Found section ");
+        kernelPrintDec(regNum);
+        kprint(" of type ");
+        kprint(memTypes[mmap->type]);
+        kprint(". \n");
+        kprint("Section base: ");
+        kernelPrintHex(mmap->base_addr_low);
+        kprint("\n");
+        if (mmap->type == 2)
+        {
+            uint64_t aligned_start = (mmap->base_addr_low + 0x0000000000000FFF) & 0xFFFFFFFFFFFFF000;
+            if (aligned_start < 0x00000000FFFFFFFF)
+            {
+                uint64_t aligned_end = (mmap->base_addr_low + mmap->length_low) & 0xFFFFFFFFFFFFF000;
+                if (aligned_end > 0x0000000100000000)
+                {
+                    aligned_end = 0x0000000100000000;
+                }
+                for (uint64_t i = aligned_start; i < aligned_end; i += 0x1000)
+                {
+                    set_frame(i);
+                }
+            }
+            kprintf("Deinitialized region %i\n", regNum);
         }
-        mmap = (memory_map_t*)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
+        mmap = (memory_map_t *)((unsigned int)mmap + mmap->size + sizeof(mmap->size));
         regNum++;
     }
 }
 
-void start_pmm(multiboot_info_t* bootinfo) {
-    uint32_t mem_size = ((bootinfo->mem_lower + bootinfo->mem_upper)/**/);
-    kprintf("Started PMM with %i kb of physical memory \n", mem_size/1024);
+void start_pmm(multiboot_info_t *bootinfo)
+{
+    uint32_t mem_size = ((bootinfo->mem_lower + bootinfo->mem_upper) /**/);
+    kprintf("Started PMM with %i kb of physical memory \n", mem_size / 1024);
     mem_end_page = mem_size;
-    nframes = mem_size/0x1000;  // 4096 (the size of a frame)
-    used_frames = 1;            // We don't know which parts of memory are usable.
-    frames = (uint32_t*)kmalloc(INDEX_FROM_BIT(nframes));
+    nframes = mem_size / 0x1000; // 4096 (the size of a frame)
+    used_frames = 1;             // We don't know which parts of memory are usable.
+    frames = (uint32_t *)kmalloc(INDEX_FROM_BIT(nframes));
     memset(frames, 0, INDEX_FROM_BIT(nframes));
     initRegions(bootinfo);
     kprintf("Available frames: %i \n", nframes);
@@ -306,14 +322,14 @@ page_t *get_page(uint32_t address, int make, page_directory_t *dir)
     uint32_t table_idx = address / 1024;
     if (dir->tables[table_idx]) // If this table is already assigned
     {
-        return &dir->tables[table_idx]->pages[address%1024];
+        return &dir->tables[table_idx]->pages[address % 1024];
     }
-    else if(make)
+    else if (make)
     {
         uint32_t tmp;
-        dir->tables[table_idx] = (page_table_t*)kmalloc_ap(sizeof(page_table_t), &tmp);
+        dir->tables[table_idx] = (page_table_t *)kmalloc_ap(sizeof(page_table_t), &tmp);
         dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
-        return &dir->tables[table_idx]->pages[address%1024];
+        return &dir->tables[table_idx]->pages[address % 1024];
     }
     else
     {
@@ -321,28 +337,40 @@ page_t *get_page(uint32_t address, int make, page_directory_t *dir)
     }
 }
 
-
 void page_fault(regs_t regs)
 {
     atomicalStart();
     // A page fault has occurred.
     // The faulting address is stored in the CR2 register.
     uint32_t faulting_address;
-    asm volatile("mov %%cr2, %0" : "=r" (faulting_address));
-    
+    asm volatile("mov %%cr2, %0"
+                 : "=r"(faulting_address));
+
     // The error code gives us details of what happened.
-    int present   = !(regs.err_code & 0x1); // Page not present
-    int rw = regs.err_code & 0x2;           // Write operation?
-    int us = regs.err_code & 0x4;           // Processor was in user-mode?
-    int reserved = regs.err_code & 0x8;     // Overwritten CPU-reserved bits of page entry?
-    int id = regs.err_code & 0x10;          // Caused by an instruction fetch?
+    int present = !(regs.err_code & 0x1); // Page not present
+    int rw = regs.err_code & 0x2;         // Write operation?
+    int us = regs.err_code & 0x4;         // Processor was in user-mode?
+    int reserved = regs.err_code & 0x8;   // Overwritten CPU-reserved bits of page entry?
+    int id = regs.err_code & 0x10;        // Caused by an instruction fetch?
 
     // Output an error message.
     kprint("Page fault! ( ");
-    if (present) {kprint("present ");}
-    if (rw) {kprint("read-only ");}
-    if (us) {kprint("user-mode ");}
-    if (reserved) {kprint("reserved ");}
+    if (present)
+    {
+        kprint("present ");
+    }
+    if (rw)
+    {
+        kprint("read-only ");
+    }
+    if (us)
+    {
+        kprint("user-mode ");
+    }
+    if (reserved)
+    {
+        kprint("reserved ");
+    }
     kprint(") at 0x");
     kernelPrintHex(faulting_address);
     kprint("\n");

@@ -4,13 +4,13 @@
 #include <stdint.h>
 
 typedef struct _rtcTime {
-    uint8_t seconds;
-    uint8_t minutes;
-    uint8_t hours;
-    uint8_t week_day;
-    uint8_t month_day;
-    uint8_t month;
-    uint8_t year;
+    uint16_t seconds;
+    uint16_t minutes;
+    uint16_t hours;
+    uint16_t week_day;
+    uint16_t month_day;
+    uint16_t month;
+    uint16_t year;
     // uint16_t century;
 } rtcTime, rtcTime_t;
 

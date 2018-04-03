@@ -6,7 +6,6 @@
 #include <va_list.h>
 #include <jslk.h>
 #include <heap.h>
-//#include <vfs.h>
 #include <vfs.h>
 #include <initrd.h>
 #include <assert.h>
@@ -55,7 +54,8 @@ int kernel_main() {
     delay(2);
     uint8_t kern = getColor(vga_green, vga_black);
     rtcTime_t time =  getRtcTime();
-    delay(2);
+    kprintf("Hours: %i, minutes: %i, seconds %i, day: %i, month: %i, year: %i \n", time.hours, time.minutes, time.seconds, time.week_day, time.month_day, (time.year + 2000));
+    delay(3);
     PRINT_PRETTY_TEXT("Testing VFS and initrd...");
     int i = 0;
     struct dirent *node = 0;
@@ -94,4 +94,6 @@ int kernel_main() {
     kfree((void*)a);
     uint32_t c = kmalloc(8);
     kprintf("C: %h \n", c);
+    rtcTime_t time2 = getRtcTime();
+    kprintf("Hours: %i, minutes: %i, seconds %i, day: %i, month: %i, year: %i \n", time2.hours, time2.minutes, time2.seconds, time2.week_day, time2.month_day, time2.year);
 }

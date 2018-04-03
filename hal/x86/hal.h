@@ -148,6 +148,8 @@ or the kernel may get stuck.
 void atomicalStart();
 void atomicalRelease();
 
+void move_stack(void *new_stack_start, uint32_t size);
+
 #ifdef _cplusplus
 }
 #endif

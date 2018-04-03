@@ -15,6 +15,7 @@ extern heap_t *kheap;
 extern uint32_t placement_address;
 extern int kernel_main();
 multiboot_info_t* meminfo;
+uint32_t initial_esp;
 
 void doubleFaultHandler(regs_t regs) {
     PANIC("Double fault");
@@ -38,9 +39,10 @@ void segNPFaultHandler(regs_t regs)
     _halt();
 }
 
-int kinit(multiboot_info_t *bootinfo)
+int kinit(multiboot_info_t *bootinfo, uint32_t stack)
 {
     _interrupts(off);
+    initial_esp = stack;
     uint8_t prekern = getColor(vga_blue, vga_black);
     cprintf("pre-kern", prekern);
     kprint("Staring HAL \n");
