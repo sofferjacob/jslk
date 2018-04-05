@@ -145,6 +145,19 @@ static uint32_t initrd_read(FILE *node, uint32_t offset, uint32_t size, uint8_t 
     return size;
 }
 
+static uint32_t initrd_write(FILE *node, uint32_t offset, uint32_t size, uint8_t *buffer) {
+    // Clear the EOF flag
+    node->eof = 0;
+    initrd_file_header_t header = file_headers[node->ino];
+    memcpy((uint8_t *)(header.offset + offset), buffer, size);
+    if (offset + size >= header.length)
+    {
+        header.length = offset + size;
+        node->eof = 1;
+    }
+    return size;
+}
+
 static struct dirent *initrd_readdir(FILE *node, uint32_t index)
 {
     if (node == initrd_root && index == 0)
@@ -185,6 +198,7 @@ FILE *initialise_initrd(uint32_t location)
     VOLUME* initrd = kmalloc(sizeof(VOLUME));
     strcpy(initrd->name, "initrd");
     initrd->read = initrd_read;
+    initrd->write = initrd_write;
     initrd->readdir = initrd_readdir;
     initrd->finddir = initrd_finddir;
     // Initialise the root directory.

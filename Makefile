@@ -51,7 +51,7 @@ image:
 	grub-mkrescue -o jslk.iso iso
 
 inird:
-	./make_initrd initrd/test.txt initrd/test.txt initrd/test2.txt initrd/test2.txt initrd/hpotter.txt initrd/hpotter.txt
+	./make_initrd initrd/test.txt initrd/test.txt initrd/test2.txt initrd/test2.txt initrd/hpotter.txt initrd/hpotter.txt initrd/log.txt initrd/log.txt
 
 run:
 	qemu-system-i386 -cdrom jslk.iso

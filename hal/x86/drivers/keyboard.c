@@ -67,7 +67,7 @@ unsigned char capsus[128] =
         0,                                                /* 29   - Control */
         'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', /* 39 */
         '\'', '`', 0,                                     /* Left shift 42*/
-        '\\', 'Z', 'X', 'C', 'B', 'B', 'N',               /* 49 */
+        '\\', 'Z', 'X', 'C', 'V', 'B', 'N',               /* 49 */
         'M', ',', '.', '/', 0,                            /* Right shift 54 */
         '*',
         0,   /* Alt */
@@ -109,10 +109,10 @@ void keyboard_handler(regs_t regs)
     {
         /* You can use this one to see if the user released the
         *  shift, alt, or control keys... */
-        if (scancode - 0x80 == 42 || scancode - 80 == 54) {
+        //if (scancode - 0x80 == 42 || scancode - 80 == 54) {
             shift = false;
             return;
-        }
+       // }
     }
     else
     {

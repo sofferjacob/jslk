@@ -1,6 +1,7 @@
 #include <hal.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include <version.h>
 #include <timer.h>
 #include <va_list.h>
@@ -10,6 +11,8 @@
 #include <initrd.h>
 #include <assert.h>
 #include "multiboot.h"
+
+static uint32_t logOffset = 0;
 
 static void PRINT_PRETTY_TEXT(char* text) {
     uint8_t kern = getColor(vga_green, vga_black);
@@ -40,10 +43,21 @@ void open(char* file_name) {
     kprint("\n");
 }
 
+void vfsLog(uint8_t* buf) {
+    FILE* fs_node = finddir_fs(root_fs, "initrd/log.txt");
+    if (fs_node == 0) {
+        kprintf("ERROR: log.txt not found! \n");
+        return;
+    }
+    size_t bufLen = strlen(buf);
+    size_t written = 0;
+    logOffset = write_fs(fs_node, logOffset, bufLen, buf);
+}
+
 int kernel_main() {
     clear_console();
     kprint("Welcome to the JSLK Kernel! \n");
-    kprint("Copyright (c) 2017 Jacobo Soffer. All Rights Reserved \n");
+    kprintf("%s\n", LICENSE);
     #ifndef KERNEL_VERSION_EXTRA
     kprintf("Kernel version: %i.%i.%i-%s \n", KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE, KERNEL_RELEASE_TYPE);
     #else
@@ -96,4 +110,8 @@ int kernel_main() {
     kprintf("C: %h \n", c);
     rtcTime_t time2 = getRtcTime();
     kprintf("Hours: %i, minutes: %i, seconds %i, day: %i, month: %i, year: %i \n", time2.hours, time2.minutes, time2.seconds, time2.week_day, time2.month_day, time2.year);
+    uint8_t* strToLog = "hello world";
+    vfsLog(strToLog);
+    kprintf("done testing log. string logged: %s . Bytes written: %i \n", strToLog, logOffset);
+    open("initrd/log.txt");
 }
