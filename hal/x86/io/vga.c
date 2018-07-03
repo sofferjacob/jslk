@@ -188,7 +188,7 @@ void startConsole()
     console_color = getColor(vga_light_grey, vga_black);
     uint8_t statusBarColor = getColor(vga_black, vga_light_grey);
     clear_console();
-    string menubarText = "JSLK Kernel 0.0.7-pre-alpha/debug";
+    string menubarText = "JSLK Kernel 0.0.7-pre-alpha/debug/canary";
     cprintf("JSLK Kernel %i.%i.%i-%s", statusBarColor, KERNEL_VERSION_MAJOR, KERNEL_VERSION_MINOR, KERNEL_VERSION_RELEASE, KERNEL_RELEASE_TYPE);
     for (size_t i = 0; i < (80 - strlen(menubarText) - 2); i++)
     {
@@ -352,4 +352,23 @@ void setMenubarText(string text) {
   {
       writeStyledString(" ", statusBarColor);
   }
+}
+
+void mapXY(uint8_t direction) {
+    switch (direction) {
+        case 1:
+            cursory++;
+            break;
+        case 2:
+            cursory--;
+            break;
+        case 3:
+            cursorx++;
+            break;
+        case 4:
+            cursorx--;
+            break;
+        default:
+            break;
+    }
 }

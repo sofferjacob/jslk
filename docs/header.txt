@@ -1,0 +1,8 @@
+/*
+This file is part of the JSLK
+Kernel (JSLK) and is distributed
+under the terms of the GNU-GPL3
+License.
+
+Copyright (c) 2018 Jacobo Soffer.
+/*

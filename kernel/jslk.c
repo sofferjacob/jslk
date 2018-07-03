@@ -110,8 +110,4 @@ int kernel_main() {
     kprintf("C: %h \n", c);
     rtcTime_t time2 = getRtcTime();
     kprintf("Hours: %i, minutes: %i, seconds %i, day: %i, month: %i, year: %i \n", time2.hours, time2.minutes, time2.seconds, time2.week_day, time2.month_day, time2.year);
-    uint8_t* strToLog = "hello world";
-    vfsLog(strToLog);
-    kprintf("done testing log. string logged: %s . Bytes written: %i \n", strToLog, logOffset);
-    open("initrd/log.txt");
 }

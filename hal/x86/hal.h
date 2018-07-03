@@ -23,43 +23,43 @@ typedef struct regs
 } regs_t;
 
 // Screen I/O
-void kputc(char c);
-void kprint(char *c);
-void writeStyledString(char *c, uint8_t color);
-void consolePutChar(char c, uint8_t color, size_t x, size_t y);
-void setConsoleColor(uint8_t color);
-uint8_t getColor(vga_color text, vga_color background);
-void clear_console();
-void debugPrint(string msg);
-void kernelPrintDec(uint32_t n);
-void kernelPrintHex(uint32_t n);
-int kprintf(string c, ...);
-int cprintf(string c, uint8_t color, ...);
-void setMenubarText(string text);
-void backspace();
+void kputc(char c);  // Print a character to the console
+void kprint(char *c);  // Print a string to the console
+void writeStyledString(char *c, uint8_t color); // Print a string with a font color to the string (use cprintf() if possible)
+void consolePutChar(char c, uint8_t color, size_t x, size_t y); // Print a character to the specified console position
+void setConsoleColor(uint8_t color);  // Change the console color (clear the console to apply changes).
+uint8_t getColor(vga_color text, vga_color background);  // Generate a console-compatible color (needed for all console functions)
+void clear_console();  // Clear the console
+void debugPrint(string msg);  // Print a string only if in debug mode.
+void kernelPrintDec(uint32_t n);  // Print an integer to the screen (use kprintf() if possible)
+void kernelPrintHex(uint32_t n);  // Print a hexadecimal integer to the screen (use kprintf() if possible)
+int kprintf(string c, ...);  // Print a formatted string to the console
+int cprintf(string c, uint8_t color, ...);  // Print a formatted string with color to the console
+void setMenubarText(string text);  // Change the menubar text
+void backspace();  // Move the cursor back one pixel on the X axis
 void rightArrow();
 
 // Port I/O
-void outb(uint16_t port, uint8_t value);
-uint8_t inb(uint16_t port);
-uint16_t inw(uint16_t port);
+void outb(uint16_t port, uint8_t value);  // Send a byte to a port/reg
+uint8_t inb(uint16_t port);  // Get a byte from a port/reg
+uint16_t inw(uint16_t port);  // Get a word from a port/reg
 
 // HAL Functions and Datatypes
-void halInitialize();
+void halInitialize();  // Start the HAL (platform intialization)
 
 enum mod {
     on,
     off,
 };
 
-typedef enum mod mode_t;
+typedef enum mod mode_t;  // Switch data type (on/off)
 
 // System Operation Modes
-uint8_t _interrupts(mode_t mode);
-void _halt();
-void _syscritical(mode_t mode);
-void system_panic(string msg);
-void full_system_panic(string msg, string file, uint32_t line);
+uint8_t _interrupts(mode_t mode);  // Set the interrupt mode (on/off)
+void _halt();  // Halt the system completely
+void _syscritical(mode_t mode);  // Used for operations where the kernel can't be interrupted
+void system_panic(string msg);  // Trigger a kernel panic
+void full_system_panic(string msg, string file, uint32_t line);  // Trigger a kernel panic with debug info.
 
 // System interrupt handler
 #define TOTAL_INTERRUPTS 47
@@ -84,13 +84,14 @@ void full_system_panic(string msg, string file, uint32_t line);
 #define IRQ13 45
 #define IRQ14 46
 #define IRQ15 47
-typedef void (*hiHand_t)(regs_t);
-int registerInterruptHandler(uint8_t num, hiHand_t handler, ...);
-void addDescription(uint8_t num, string description);
+typedef void (*hiHand_t)(regs_t);  // Typedef for Higher Lever interrupt handlers
+int registerInterruptHandler(uint8_t num, hiHand_t handler, ...);  // Register an interrupt handler (can be chained, chainedLock, freedLock or chainProtected)
+void addDescription(uint8_t num, string description);  // add a description to an interrupt
 void genInterrupt(uint8_t num);
 string getintDescription();
 uint8_t findFreeInterrupt();
 int clearChainedInterrupt(uint8_t num);
+int clearInterrupt(uint8_t num);
 
 // System Timer Related functions
 void start_pit(uint32_t freq);

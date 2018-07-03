@@ -12,6 +12,8 @@ static bool shift;
 static bool ctrl;
 static char scancode;
 
+extern void mapXY(uint8_t direction);
+
 /* KBDUS means US Keyboard Layout. This is a scancode table
 *  used to layout a standard US keyboard. I have left some
 *  comments in to give you an idea of what key is what, even
@@ -116,10 +118,27 @@ void keyboard_handler(regs_t regs)
     }
     else
     {
-        if (scancode == 42 || scancode == 54) {
+        if (scancode == 42 || scancode == 54 || scancode == 58) {
             shift = true;
             return;
         }
+        if (scancode == 80) {
+            mapXY(1);
+            return;
+        }
+        if (scancode == 72) {
+            mapXY(2);
+            return;
+        }
+        if (scancode == 77) {
+            mapXY(3);
+            return;
+        }
+        if (scancode == 75) {
+            mapXY(4);
+            return;
+        }
+        //kernelPrintDec(scancode);
         /* Here, a key was just pressed. Please note that if you
         *  hold a key down, you will get repeated key press
         *  interrupts. */
